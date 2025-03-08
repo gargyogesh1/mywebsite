@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job.job_title }} Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #2980b9;
+        }
+        .highlight {
+            background-color: #e7f1ff;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .toggle-description {
+            cursor: pointer;
+            color: #2980b9;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ job.job_title }}</h1>
+        <p><strong>Posted by:</strong> {{ job.jobpost_name }}</p>
+        <p><strong>Email:</strong> <span class="highlight">{{ job.jobpost_email }}</span></p>
+        <p><strong>Phone:</strong> <span class="highlight">{{ job.jobpost_phoneno }}</span></p>
+        <p><strong>Designation:</strong> {{ job.jobpost_designation }}</p>
+        <p><strong>Workplace:</strong> {{ job.job_workplace }}</p>
+        <p><strong>Location:</strong> {{ job.job_location }}</p>
+        <p><strong>Type:</strong> {{ job.job_type }}</p>
+        <p><strong>Number of Openings:</strong> {{ job.job_no_opening }}</p>
+        <p><strong>Salary:</strong> {{ job.job_salary }}</p>
+        <p><strong>Experience:</strong> {{ job.job_experience }}</p>
+        <p><strong>Skills:</strong> {{ job.job_skills }}</p>
+        <p><strong>Description:</strong> <span id="description">{{ job.description }}</span></p>
+        <p class="toggle-description" onclick="toggleDescription()">Toggle Description</p>
+    </div>
+
+    <script>
+        function toggleDescription() {
+            const description = document.getElementById('description');
+            if (description.style.display === 'none') {
+                description.style.display = 'block';
+            } else {
+                description.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

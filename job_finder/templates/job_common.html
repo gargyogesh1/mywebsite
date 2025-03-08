@@ -1,0 +1,205 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/home.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/registerlogin.css' %}"> {% endcomment %}
+    {% comment %} <link rel="stylesheet" href="{% static 'css/company_profile.css' %}"> {% endcomment %}
+
+
+
+    {% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> {% endcomment %}
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous"> {% endcomment %}
+
+    <!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+
+<!-- Open Iconic Icons (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
+
+<!-- Animate.css (CDN) -->
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"> {% endcomment %}
+
+<!-- Owl Carousel (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+<!-- Magnific Popup (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+
+<!-- AOS (Animate On Scroll) Library (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+<!-- Ionicons (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.5.2/ionicons.min.css">
+
+<!-- Bootstrap Datepicker (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+<!-- jQuery Timepicker (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.css">
+
+<!-- Flaticon and Icomoon (Keep locally if needed for licensing reasons or custom icons) -->
+{% comment %} <link rel="stylesheet" href="css/flaticon.css">
+<link rel="stylesheet" href="css/icomoon.css">
+
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="css/style.css"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'job_finder/css/flaticon.css' %}">
+<link rel="stylesheet" href="{% static 'job_finder/css/icomoon.css' %}">
+<link rel="stylesheet" href="{% static 'job_finder/css/animate.css' %}">
+<link rel="stylesheet" href="{% static 'job_finder/css/style2.css' %}">
+    
+
+    {% block headCss %}
+    {% endblock%}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/aatjs@0.0.3/dist/aat.min.js"></script>
+
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    {% comment %} <link rel="stylesheet" href="{% static 'rest_framework/css/default.css' %}"> {% endcomment %}
+    
+    {% comment %} <script src="{% static 'rest_framework/js/default.js' %}"></script> {% endcomment %}
+
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body{
+    min-height: 100vh;
+  }
+</style>
+</head>
+<body>
+  <section class="main-navbar">
+   
+        <div class="navbar">
+          <i class='bx bx-menu'></i>
+          <div class="logo"><a href="http://127.0.0.1:8000/home/">Yogesh Garg</a></div>
+          <div class="nav-links">
+            <div class="sidebar-logo">
+              <span class="logo-name">Yogesh Garg</span>
+              <i class='bx bx-x' ></i>
+            </div>
+            <ul class="links">
+              <li><a href="#">HOME</a></li>
+              <li>
+                <a href="#">HTML & CSS</a>
+                <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
+                <ul class="htmlCss-sub-menu sub-menu">
+                  <li><a href="#">Web Design</a></li>
+                  <li><a href="#">Login Forms</a></li>
+                  <li><a href="#">Card Design</a></li>
+                  <li class="more">
+                    <span><a href="#">More</a>
+                    <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                  </span>
+                    <ul class="more-sub-menu sub-menu">
+                      <li><a href="#">Neumorphism</a></li>
+                      <li><a href="#">Pre-loader</a></li>
+                      <li><a href="#">Glassmorphism</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">JAVASCRIPT</a>
+                <i class='bx bxs-chevron-down js-arrow arrow '></i>
+                <ul class="js-sub-menu sub-menu">
+                  <li><a href="#">Dynamic Clock</a></li>
+                  <li><a href="#">Form Validation</a></li>
+                  <li><a href="#">Card Slider</a></li>
+                  <li><a href="#">Complete Website</a></li>
+                </ul>
+              </li>
+              <li><a href="#">ABOUT US</a></li>
+              <li><a href="#">CONTACT US</a></li>
+            </ul>
+          </div>
+          <div class="search-box">
+            <i class='bx bx-search'></i>
+            <div class="input-box">
+              <input type="text" placeholder="Search...">
+            </div>
+          </div>
+        </div>
+    
+  </section>
+    <!-- Main Content -->
+     <div style="margin-top: 70px;">
+     </div>
+
+        {% block content %}
+
+        {% endblock %}
+ 
+
+    <!-- Footer -->
+  
+        {% comment %} <p>&copy; 2024 My Website</p> {% endcomment %}
+         {% include 'footer.html' %}
+
+         {% block script %}
+
+         {% endblock %}
+    
+    <script src= "{% static 'js/navbar.js' %}"></script>
+    {% comment %} <script src= "{% static 'js/home.js' %}"></script> {% endcomment %}
+    {% comment %} <script src="https://unpkg.com/aatjs@0.0.3/dist/aat.min.js"></script> {% endcomment %}
+    <!-- jQuery (CDN) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- jQuery Migrate (CDN) -->
+<script src="https://code.jquery.com/jquery-migrate-3.4.1.min.js"></script>
+
+<!-- Popper.js (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+<!-- jQuery Easing (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+<!-- Waypoints (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+
+<!-- Stellar.js (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.stellar/0.6.2/jquery.stellar.min.js"></script>
+
+<!-- Owl Carousel (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<!-- Magnific Popup (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
+<!-- AOS (Animate On Scroll) (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- jQuery Animate Number (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-animateNumber/0.0.14/jquery.animateNumber.min.js"></script>
+
+<!-- Scrollax (CDN Alternative Not Available) -->
+<script src="job_finderjs/scrollax.min.js"></script> <!-- Keep locally if needed -->
+
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+
+<!-- Google Map (Custom Script, Keep Locally if Customized) -->
+<script src="job_finder/js/google-map.js"></script>
+
+<!-- Main Script (Custom Script, Keep Locally if Customized) -->
+<script src="job_finder/js/main.js"></script>
+
+
+</body>
+</html>

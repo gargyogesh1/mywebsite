@@ -1,0 +1,183 @@
+{% extends "common.html" %}
+
+{% block content %}
+
+
+<div class="company_profile-main-wrapper">
+    <div class="company_profile-form-wrapper">
+      <img src="https://picsum.photos/500/300" alt="Company Logo Placeholder">
+      {% if messages %}
+      <div class="alert">
+          {% for message in messages %}
+              <p>{{ message }}</p>
+          {% endfor %}
+      </div>
+  {% endif %}
+      <form action="{% url 'company_profile' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="company_profile-form-title">
+          <h2>Company Details</h2>
+          <p>
+            Please provide accurate company details for registration purposes.
+          </p>
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_name" class="company_profile-form-label">
+            Company Name
+          </label>
+          <input
+          value="{{company.name}}"
+            type="text"
+            name="company_name"
+            id="company_name"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="office_email" class="company_profile-form-label">
+            Office Email ID
+          </label>
+          <input
+            value="{{company.official_email}}"
+            type="email"
+            name="office_email"
+            id="office_email"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_phone" class="company_profile-form-label">
+            Company Mobile Number
+          </label>
+          <input
+            value="{{company.phone_number}}"
+            type="text"
+            name="company_phone"
+            id="company_phone"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_address" class="company_profile-form-label">
+            Company Address
+          </label>
+          <input
+            value="{{company.address}}"
+            type="text"
+            name="company_address"
+            id="company_address"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_url" class="company_profile-form-label">
+            Company URL
+          </label>
+          <input
+            value="{{company.website}}"
+            type="url"
+            name="company_url"
+            id="company_url"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_work" class="company_profile-form-label">
+            Company Work/Domain
+          </label>
+          <input
+            value="{{company.industry}}"
+            type="text"
+            name="company_work"
+            id="company_work"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="company_logo" class="company_profile-form-label">
+            Company Logo
+          </label>
+          <input
+            value="{{company.company_logo}}"
+            type="file"
+            name="company_logo"
+            id="company_logo"
+            class="company_profile-form-input"
+            accept="image/*"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="num_employees" class="company_profile-form-label">
+            Number of Employees
+          </label>
+          <input
+            value="{{company.number_of_employees}}"
+            type="text"
+            name="num_employees"
+            id="num_employees"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="filler_name" class="company_profile-form-label">
+            Form Filler Name
+          </label>
+          <input
+            type="text"
+            name="filler_name"
+            id="filler_name"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="filler_designation" class="company_profile-form-label">
+            Form Filler Designation
+          </label>
+          <input
+            type="text"
+            name="filler_designation"
+            id="filler_designation"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="filler_phone" class="company_profile-form-label">
+            Form Filler Phone Number
+          </label>
+          <input
+            type="text"
+            name="filler_phone"
+            id="filler_phone"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <div class="company_profile-mb-3">
+          <label for="filler_email" class="company_profile-form-label">
+            Form Filler Email ID
+          </label>
+          <input
+            type="email"
+            name="filler_email"
+            id="filler_email"
+            class="company_profile-form-input"
+          />
+        </div>
+
+        <button class="company_profile-btn">Submit Details</button>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

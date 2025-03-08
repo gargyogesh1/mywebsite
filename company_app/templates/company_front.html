@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .jobcard {
+            width: 600px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 20px;
+        }
+        .jobcard .jobcard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .jobcard .jobcard-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+        }
+        .jobcard .jobcard-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .jobcard .jobcard-subtitle {
+            font-size: 14px;
+            color: #555;
+            margin: 4px 0;
+        }
+        .jobcard .jobcard-subtitle span {
+            color: #f39c12;
+        }
+        .jobcard .jobcard-body {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #333;
+        }
+        .jobcard .jobcard-footer {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #777;
+        }
+        .jobcard .icon {
+            margin-right: 8px;
+        }
+        .jobcard .save {
+            color: #007bff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        
+        <h1>Job Listings</h1>
+        
+        <!-- Button to navigate to the profile page -->
+        <a href="profile.html" class="btn btn-primary mb-3">Profile</a>
+        
+        <!-- Button to add a new job -->
+        <a href="add-job.html" class="btn btn-success mb-3">Add New Job</a>
+        {% for job in job %}
+        <a href="{% url 'card_detail' job.unique_number %}">
+            <div class="jobcard">
+
+                <div class="jobcard-header">
+                    <div>
+                        <p class="jobcard-title">{{job.job_title}} - {{job.job_location}}</p>
+                        <p class="jobcard-subtitle">2coms <span>★ 3.8</span> | 446 Reviews</p>
+                    </div>
+                    <img src="logo.png" alt="Company Logo">
+                </div>
+                <div class="jobcard-body">
+                    <p><span class="icon">📅</span>{{ job.job_experience}} <span class="icon">💰</span>{{job.job_salary}} <span class="icon">📍</span>{{job.job_location}}</p>
+                    <p><span class="icon">📄</span>Graduate/Post Graduate with industry/domain and network operations experience...</p>
+                    <p>service operations · service assurance · order management · consulting · customer</p>
+                </div>
+                <div class="jobcard-footer">
+                    <p>1 Day Ago <span class="save">💾 Save</span></p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        <!-- List of existing jobs -->
+        {% comment %} <div class="job-list">
+            <ul class="list-group">
+                <!-- Example job items -->
+                <li class="list-group-item">Software Engineer - Develop and maintain software applications.</li>
+                <li class="list-group-item">Data Analyst - Analyze data and generate reports.</li>
+                <li class="list-group-item">Project Manager - Oversee project timelines and deliverables.</li>
+                <!-- Add more job items here -->
+            </ul>
+        </div> {% endcomment %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
