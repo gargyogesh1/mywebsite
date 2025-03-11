@@ -2,17 +2,6 @@
 {% extends "common.html" %}
 {% block content %}
 
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Listings</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-</head>
-<body> {% endcomment %}
-
     <style>
         .jobcard {
             width: 600px;
@@ -73,7 +62,7 @@
         <a href="profile.html" class="btn btn-primary mb-3">Profile</a>
         
         <!-- Button to add a new job -->
-        <a href="/company_app/company_job" class="btn btn-success mb-3">Add New Job</a>
+        <a href="add-job.html" class="btn btn-success mb-3">Add New Job</a>
         {% for job in job %}
         <a href="{% url 'card_detail' job.unique_number %}">
             <div class="jobcard">
@@ -90,27 +79,17 @@
                     <p><span class="icon">📄</span>Graduate/Post Graduate with industry/domain and network operations experience...</p>
                     <p>service operations · service assurance · order management · consulting · customer</p>
                 </div>
-                <div class="jobcard-footer">
-                    <p>1 Day Ago <span class="save">💾 Save</span></p>
+                <div class="jobcard-footer d-flex justify-content-between" >
+                    <p>1 Day Ago</p>
+                    <span class="save btn">Apply</span>
                 </div>
             </div>
         </a>
         {% endfor %}
-        <!-- List of existing jobs -->
-        {% comment %} <div class="job-list">
-            <ul class="list-group">
-                <!-- Example job items -->
-                <li class="list-group-item">Software Engineer - Develop and maintain software applications.</li>
-                <li class="list-group-item">Data Analyst - Analyze data and generate reports.</li>
-                <li class="list-group-item">Project Manager - Oversee project timelines and deliverables.</li>
-                <!-- Add more job items here -->
-            </ul>
-        </div> {% endcomment %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-{% comment %} </body>
-</html> {% endcomment %}
+
 {% endblock %}

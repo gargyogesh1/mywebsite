@@ -5,10 +5,12 @@ from django.forms import ValidationError
 
 # Validator for official email
 def validate_official_email(value):
-    if not value.endswith(('.com', '.org', '.net', '.edu', '.gov', '.in')):
-        raise ValidationError("Please provide a valid official email address.")
-    if value.endswith("@gmail.com"):
-        raise ValidationError("Gmail addresses are not allowed for the company email.")
+    # TODO:later active
+    # if not value.endswith(('.com', '.org', '.net', '.edu', '.gov', '.in')):
+    #     raise ValidationError("Please provide a valid official email address.")
+    # if value.endswith("@gmail.com"):
+    #     raise ValidationError("Gmail addresses are not allowed for the company email.")
+    pass
     
 class Company(models.Model):
     INDUSTRY_CHOICES = [
@@ -103,7 +105,7 @@ class Job(models.Model):
     job_skills=models.CharField(max_length=255)
     description = models.TextField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
-    unique_number = models.TextField(max_length=255 , blank =True)
+    unique_number = models.CharField(default="0",max_length=255,null=True)
     # unique_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, blank=True)
 
     def __str__(self):

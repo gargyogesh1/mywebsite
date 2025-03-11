@@ -6,11 +6,19 @@ from mywebsite.models import *
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # Create your views here.
-
+from company_app.models import Job
 from django.http import HttpResponse
 
 def example_view(request):
     return HttpResponse("This is a placeholder view.")
+
+
+def seeker_jobs(request):
+    job = Job.objects.all()
+    print(job)
+    return render(request, 'seeker_jobs.html',{"job":job})
+
+
 
 @csrf_protect
 def seeker_register(request):

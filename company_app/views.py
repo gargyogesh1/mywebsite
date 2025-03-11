@@ -99,6 +99,7 @@ def company_job(request):
                 data = {
                     "contents": [{
                         "parts": [
+                            {"text": f"write output in json format"},
                             {"text": f"JD Type: {job_title}"},
                             {"text": "Experience: 3-5 years"},
                             {"text": f"Skills: {job_skills}"},
@@ -131,6 +132,7 @@ def company_job(request):
                     messages.error(request, "Failed to generate job description from API.")
                 
                 # Create and save the JobPost object to the database
+                
                 print("start object created")
                 job = Job.objects.create(
                     jobpost_name=jobpost_name,
@@ -214,16 +216,17 @@ def company_register(request):
         errors = []
         if not name or not phone_number or not official_email or not website or not address or not industry or not number_of_employees or not password:
             errors.append("All Fields marked with * are required. ")
-        if not phone_number.isdigit():
-            errors.append("Phone number must contain only digits.")
-        if len(phone_number)<10:
-            errors.append("Phone number must be at least 10 digits.")
-        if Company.objects.filter(official_email=official_email).exists():
-            errors.append("Email is already registered.")
-        if "@gmail.com" in official_email:
-            errors.append("Gmail addresses are not allowed for the company email.")
-        if len(password) < 8:
-            errors.append("Password must be at least 8 characters long.")  
+        # TODO : Later validation
+        # if not phone_number.isdigit():
+        #     errors.append("Phone number must contain only digits.")
+        # if len(phone_number)<10:
+        #     errors.append("Phone number must be at least 10 digits.")
+        # if Company.objects.filter(official_email=official_email).exists():
+        #     errors.append("Email is already registered.")
+        # if "@gmail.com" in official_email:
+        #     errors.append("Gmail addresses are not allowed for the company email.")
+        # if len(password) < 8:
+        #     errors.append("Password must be at least 8 characters long.")  
         
         if errors:
             for error in errors:
@@ -265,7 +268,7 @@ def company_login(request):
     if request.method == "POST":
         email=request.POST.get('email')
         password = request.POST.get('password')
-        
+        # TODO: later validation
         if "@gmail.com" in email:
             messages.error(request,"Its not be a official email id")
             return redirect('company_login')
