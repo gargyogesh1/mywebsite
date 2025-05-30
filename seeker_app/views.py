@@ -9,8 +9,6 @@ from django.contrib import messages
 from company_app.models import Job
 from django.http import HttpResponse
 
-def example_view(request):
-    return HttpResponse("This is a placeholder view.")
 
 
 def seeker_jobs(request):
@@ -83,8 +81,8 @@ def seeker_register(request):
             })
             
         return redirect('success')  # Redirect to a success page
-
     return render(request, "seeker_register.html")
+
 
 def seeker_login(request):
     if request.method == "POST":

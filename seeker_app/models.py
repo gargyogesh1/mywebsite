@@ -1,10 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-# Create your models here.
-# def validate_official_email(value):
-#     if value.endswith("@gmail.com"):
-#         raise ValidationError("Gmail addresses are not allowed for the company email.")
  
 class Seeker(models.Model):
     WORK_STATUS_CHOICES = [
@@ -104,13 +100,6 @@ class SeekerProfileEmployment(models.Model):
 
     def __str__(self):
         return f"{self.employment_role} at {self.employment_company_name}"
-
-# class SeekerProfileAccomplishment(models.Model):
-#     title = models.CharField(max_length=255)
-#     description = models.TextField()
-
-#     def __str__(self):
-#         return self.title
 
 
 class SeekerAcademicAchievement(models.Model):

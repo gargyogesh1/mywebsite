@@ -7,69 +7,11 @@ import requests
 from .models import *
 from mywebsite.models import *
 
-def example_view(request):
-    return redirect("company_profile.html")
-
-# def company_job(request):
-#     print(request.user.email)
-#     company = Company.objects.get(official_email = request.user.email)
-#     print(company)
-#     print("hello")
-#     if request.method == "POST":
-#             jobpost_name = request.POST.get('jobpost_name')
-#             jobpost_phoneno = request.POST.get('jobpost_phoneno')
-#             jobpost_email = request.POST.get('jobpost_email')
-#             jobpost_designation = request.POST.get('jobpost_designation')
-#             job_title = request.POST.get('job_title')
-#             job_workplace = request.POST.get('job_workplace')
-#             job_location = request.POST.get('job_location')
-#             job_type = request.POST.get('job_type')
-#             job_no_opening = request.POST.get('job_no_opening')
-#             job_salary = request.POST.get('job_salary')
-#             job_skills = request.POST.get('job_skills')
-#             description = request.POST.get('description')
-            
-#             errors = []
-#             if not jobpost_name or not jobpost_phoneno or not jobpost_email or not job_title:
-#                 # return HttpResponse("Error: Required fields are missing.", status=400)
-#                 print()
-#                 errors.append("Error: Required fields are missing.")  
-                
-#                 if errors:
-#                     for error in errors:
-#                         messages.error(request, error)
-#             else:
-#                 # Create and save the JobPost object to the database
-                
-#                 print("start object created")
-#                 job = Job.objects.create(
-#                     jobpost_name=jobpost_name,
-#                     jobpost_phoneno=jobpost_phoneno,
-#                     jobpost_email=jobpost_email,
-#                     jobpost_designation=jobpost_designation,
-#                     job_title=job_title,
-#                     job_workplace=job_workplace,
-#                     job_location=job_location,
-#                     job_type=job_type,
-#                     job_no_opening=job_no_opening,
-#                     job_salary=job_salary,
-#                     job_skills=job_skills,
-#                     company=company,
-#                     description=description,
-#                 )
-#                 job.save()
-#                 print("end object created")
-#             messages.success(request,"Company registration Sucessfully!")
-    
-#     return render(request,"job_post.html")
 
 def company_job(request):
     print(request.user.email)
     company = Company.objects.get(official_email = request.user.email)
-    print(company)
-    print("hello")
     if request.method == "POST":
-            print("hello")
             jobpost_name = request.POST.get('jobpost_name')
             jobpost_phoneno = request.POST.get('jobpost_phoneno')
             jobpost_email = request.POST.get('jobpost_email')
