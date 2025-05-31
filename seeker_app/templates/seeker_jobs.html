@@ -59,10 +59,10 @@
         <h1>Job Listings</h1>
         
         <!-- Button to navigate to the profile page -->
-        <a href="profile.html" class="btn btn-primary mb-3">Profile</a>
+        <a href="/seeker_app/seeker_profile" class="btn btn-primary mb-3">Profile</a>
         
         <!-- Button to add a new job -->
-        <a href="add-job.html" class="btn btn-success mb-3">Add New Job</a>
+        {% comment %} <a href="add-job.html" class="btn btn-success mb-3">Add New Job</a> {% endcomment %}
         {% for job in job %}
         <a href="{% url 'card_detail' job.unique_number %}">
             <div class="jobcard">

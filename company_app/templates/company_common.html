@@ -56,7 +56,7 @@
         </div>
         <ul class="links">
           <li><a href="/home">HOME</a></li>
-          <li><a href="/seeker_app/jobs">Jobs</a></li>
+          <li><a href="/company_app/company_front">Jobs</a></li>
           {% comment %} <li>
             <a href="#">HTML & CSS</a>
             <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
@@ -94,9 +94,9 @@
             <i class='bx bxs-chevron-down js-arrow arrow '></i>
           <ul class="js-sub-menu sub-menu">
             <li><a href="#">{{ request.user.get_username }}</a></li>
-            {% comment %} {% for group in groups %}
+            {% for group in groups %}
             <li><a href="#">{{group.name}}</a></li>
-            {% endfor %} {% endcomment %}
+            {% endfor %}
 
             <li>{% if groups.first.name == "Employee" %}
               <a href="/seeker_app/seeker_profile">
