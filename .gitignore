@@ -1,1 +1,5 @@
 db.sqlite3
+/company_app/__pycache__
+/job_finder/__pycache__
+/mywebsite/__pycache__
+/seeker_app/__pycache__
