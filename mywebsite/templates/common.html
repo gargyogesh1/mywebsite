@@ -98,11 +98,9 @@
             <li><a href="#">{{group.name}}</a></li>
             {% endfor %} {% endcomment %}
 
-            <li>{% if groups.first.name == "Employee" %}
+            <li>
               <a href="/seeker_app/seeker_profile">
-            {% else %}
-              <a href="/company_app/company_profile">
-            {% endif %}
+           
                 Profile
               </a></li>
 

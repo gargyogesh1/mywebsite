@@ -48,7 +48,7 @@ class SeekerEducation(models.Model):
     year_of_passing = models.DateField(null=True, blank=True)
     marks = models.IntegerField(null=True)
     def __str__(self):
-        return f"{self.degree} from {self.institution}"
+        return f"{self.degree} from {self.institution} of {self.seeker.email_id}"
 
   
 class SeekerLanguage(models.Model):
@@ -64,7 +64,7 @@ class SeekerLanguage(models.Model):
 
 class SeekerInternship(models.Model):
     seeker = models.ForeignKey('Seeker',on_delete=models.CASCADE)
-    icompany_name = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255)
     role = models.CharField(max_length=255)
     duration = models.CharField(max_length=100)
 
@@ -75,7 +75,7 @@ class SeekerInternship(models.Model):
 class SeekerProject(models.Model):
     seeker = models.ForeignKey('Seeker',on_delete=models.CASCADE)
     project_title = models.CharField(max_length=255)
-    project_description = models.TextField()
+    project_description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.project_title
     
@@ -95,7 +95,7 @@ class SeekerProfileEmployment(models.Model):
     seeker = models.ForeignKey('Seeker',on_delete=models.CASCADE)
     employment_company_name = models.CharField(max_length=255,null=True)
     employment_role = models.CharField(max_length=255,null=True)
-    employment_start_date = models.DateField()
+    employment_start_date = models.DateField(null=True, blank=True)
     employment_end_date = models.DateField(null=True, blank=True)  # Allow ongoing jobs
 
     def __str__(self):
