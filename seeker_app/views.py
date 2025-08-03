@@ -67,7 +67,7 @@ def seeker_register(request):
  
         # Create User instance for authentication
         user = User.objects.create_user(
-            username=email_id,  # Using email as username
+            username=email_id+"+seeker",  # Using email as username
             email=email_id,
             password=password  # The password will be hashed automatically
         )
@@ -79,14 +79,16 @@ def seeker_register(request):
             user.groups.add(employee_group)  # Assign the user to the group
         except Group.DoesNotExist:
             errors.append("The 'Employee' group does not exist. Please contact admin.")
-            return redirect(request, "seeker_register.html", {
-                "errors": errors,
-                "full_name": full_name,
-                "email_id": email_id,
-                "mobile_number": mobile_number,
-                "work_status": work_status,
-                "promotions": promotions
-            })
+            employee_group = Group.objects.create(name="Employee")  # Create the group if it doesn't exist
+            user.groups.add(employee_group)  # Assign the user to the group
+        return redirect(request, "seeker_register.html", {
+            "errors": errors,
+            "full_name": full_name,
+            "email_id": email_id,
+            "mobile_number": mobile_number,
+            "work_status": work_status,
+            "promotions": promotions
+        })
   
             
      
@@ -100,7 +102,7 @@ def seeker_login(request):
         password = request.POST.get('password')
 
         # Authenticate the user
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=email+"+seeker", password=password)
         
         if user is not None:
             # Login the user
@@ -155,10 +157,12 @@ def seeker_forgot_password(request):
             elif password != cpassword:
                 messages.error(request, "Passwords do not match.")
                 context = {'step': "3", 'email': email}
+            elif not Seeker.objects.filter(email_id=email).exists():
+                messages.error(request, "Email not found.")
+                context = {'step': "2", 'email': email}
             else:
                 try:
-                    seeker = Seeker.objects.get(email_id=email)
-                    user = User.objects.get(username=email)
+                    user = User.objects.get(username=email+"+seeker")
                     user.set_password(password)  # Hash the new password
                     user.save()
                     messages.success(request, "Password changed successfully. You can now login.")

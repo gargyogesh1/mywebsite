@@ -169,7 +169,8 @@ def company_register(request):
         #     errors.append("Gmail addresses are not allowed for the company email.")
         # if len(password) < 8:
         #     errors.append("Password must be at least 8 characters long.")  
-        
+        if Company.objects.filter(official_email=official_email).exists():
+            errors.append("Email is already registered.")
         if errors:
             for error in errors:
                 messages.error(request, error)
@@ -186,20 +187,25 @@ def company_register(request):
                 number_of_employees=number_of_employees,
                 password=hashed_password,
             )
-            if not User.objects.filter(email=official_email).exists():
+            if not User.objects.filter(email=official_email+"+company").exists():
                 # Add the user to the User table
                 user = User.objects.create_user(
-                    username=official_email,  # Use email as the username
+                    username= official_email+"+company",  # Use email as the username
                     email=official_email,
                     password=password,
                 )
+                print("User created:", user.username)
                 
-            try:
-                company_group = Group.objects.get(name="Company")  # Fetch the "Company" group
-                user.groups.add(company_group)  # Add the user to the group
-            except Group.DoesNotExist:
-                 print("The 'Company' group does not exist. Please create it in the Admin panel.")
-            
+                try:
+                    company_group = Group.objects.get(name="Company")  # Fetch the "Company" group
+                    user.groups.add(company_group)  # Add the user to the group
+                    
+                except Group.DoesNotExist:
+                    Group.objects.create(name="Company")  # Create the group if it doesn't exist
+                    print("The 'Company' group does not exist. Please create it in the Admin panel.")
+                    company_group = Group.objects.get(name="Company")  # Fetch the "Company" group
+                    user.groups.add(company_group)  # Add the user to the group
+                user.save()  # Save the user instance
 
             messages.success(request, "User added to the system.")
             messages.success(request,"Company registration Sucessfully!")
@@ -216,10 +222,9 @@ def company_login(request):
             return redirect('company_login')
         else:
             emailid = email
-        
-        
-        user1 = authenticate(request,username= emailid , password = password)
-        
+
+        user1 = authenticate(request,username= emailid+"+company" , password = password)
+
         if user1 is not None:
             login(request,user1)
             return redirect('company_front')
@@ -229,6 +234,64 @@ def company_login(request):
         
     return render(request,'company_login.html')
 
+
+def company_forgot_password(request):
+    context= {"step": "1"}
+    
+    if request.method == "POST":
+        step=request.POST.get('step', '1')
+        print("Step:", step)
+        email = request.POST.get('email')
+        if step == "2":
+            if not Company.objects.filter(official_email=email).exists():
+                context = {'step': "1"}
+                messages.error(request, "Email not found.")
+            else:
+                messages.success(request, "OTP has been sent to your email.")
+                context = {'step': "2", 'email': email}
+        if step == "3":
+            action=request.POST.get('action')
+            if action == "resend_otp":
+                if not Company.objects.filter(official_email=email).exists():
+                    messages.error(request, "Email not found.")
+                # Logic to resend OTP goes here
+                messages.success(request, "OTP has been resent to your email.")
+                context = {'step': "2", 'email': email}
+            else:
+                otp = request.POST.get('otp')
+                if not otp:
+                    messages.error(request, "OTP is required.")
+                    context = {'step': "2", 'email': email}
+                if not Company.objects.filter(official_email=email).exists():
+                    messages.error(request, "Email not found.")
+                    context = {'step': "2", 'email': email}
+                if otp == "123456":  # Replace with actual OTP validation logic
+                    messages.success(request, "OTP verified successfully. You can now reset your password.")
+                    context = {'step': "3", 'email': email}
+        if step == "4":
+            password = request.POST.get('password')
+            cpassword = request.POST.get('cpassword')
+            if not password or not cpassword:
+                messages.error(request, "Both password fields are required.")
+                context = {'step': "3", 'email': email}
+            elif password != cpassword:
+                messages.error(request, "Passwords do not match.")
+                context = {'step': "3", 'email': email}
+            elif not Company.objects.filter(official_email=email).exists():
+                messages.error(request, "Email not found.")
+                context = {'step': "3", 'email': email}
+            else:
+                try:
+                    user = User.objects.get(username=email+"+company")
+                    user.set_password(password)  # Hash the new password
+                    user.save()
+                    messages.success(request, "Password changed successfully. You can now login.")
+                    return redirect('company_login')  # Redirect to login page
+                except Company.DoesNotExist:
+                    messages.error(request, "Company not found.")
+                    context = {'step': "1"}
+
+    return render(request, 'company_forgot_password.html',context)
 
 
 def company_front(request):
