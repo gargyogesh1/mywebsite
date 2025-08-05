@@ -1,0 +1,21 @@
+
+<div id="exam-entry-filled" class="form-entry pt-4" >
+    <hr>
+
+    <label>Exam Name :</label>
+    <input type="text" name="exam_name[]" value="{{ entry.exam_name|default:'' }}" placeholder="e.g., GATE, CAT" required />
+    <label>Score/Rank:</label>
+    <input type="text" name="competitive_score[]" value="{{ entry.competitive_score|default:'' }}" placeholder="e.g., 99.5 percentile" />
+
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'internship', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'internship')">Delete</button>
+    {% endif %}
+  
+
+</div>

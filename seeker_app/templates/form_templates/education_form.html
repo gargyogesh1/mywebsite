@@ -1,0 +1,61 @@
+
+{% if entry.id %} 
+<div id="education-entry-filled" class='form-entry education-entry-filled pt-4'>
+    Filled
+    {% else %} 
+    <div id="education-entry" class='form-entry education-entry pt-4'>
+    Unfilled
+    {% endif %}
+    <label>Degree:</label>
+    <select name="degree[]">
+        {# Use the entry's degree, or default to 'GRADUATION' if it's a new entry #}
+        {% with selected_degree=entry.degree|default:'' %}
+            <option value="" {% if selected_degree == '' %}selected{% endif %}>None</option>
+            <option value="TENTH" {% if selected_degree == 'TENTH' %}selected{% endif %}>10th</option>
+            <option value="TWELFTH" {% if selected_degree == 'TWELFTH' %}selected{% endif %}>12th</option>
+            <option value="DIPLOMA" {% if selected_degree == 'DIPLOMA' %}selected{% endif %}>Diploma</option>
+            <option value="GRADUATION" {% if selected_degree == 'GRADUATION' %}selected{% endif %}>Graduation</option>
+            <option value="POSTGRADUATION" {% if selected_degree == 'POSTGRADUATION' %}selected{% endif %}>Postgraduation</option>
+            <option value="HIGHER_STUDIES" {% if selected_degree == 'HIGHER_STUDIES' %}selected{% endif %}>Higher Studies</option>
+        {% endwith %}
+    </select>
+    <div>
+        <label>Institution:</label>
+    </div>
+    <input 
+        type="text" 
+        name="institution[]" 
+        placeholder="University/School Name" 
+        value="{{ entry.institution|default:'' }}">
+
+    <label>Year of Starting:</label>
+    <input 
+        type="date" 
+        name="year_of_starting[]"
+        value="{{ entry.year_of_starting|date:'Y-m-d'|default:'' }}">
+
+    <label>Year of Passing:</label>
+    <input 
+        type="date" 
+        name="year_of_passing[]"
+        value="{{ entry.year_of_passing|date:'Y-m-d'|default:'' }}">
+
+    <label>Marks (%):</label>
+    <input 
+        type="number" 
+        name="marks[]" 
+        placeholder="e.g., 85" 
+        min="0" 
+        max="100"
+        value="{{ entry.marks|default:'' }}">
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'education', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'education')">Delete</button>
+    {% endif %}
+    <hr>
+</div>

@@ -1,0 +1,24 @@
+<div id="employment-entry-filled" class="form-entry pt-4" >
+    <hr>
+
+      <label>Company Name:</label>
+        <input type="text" name="employment_company_name[]" value="{{ entry.employment_company_name|default:'' }}" placeholder="Company Name" />
+        <label>Role:</label>
+        <input type="text" name="employment_role[]" value="{{ entry.employment_role|default:'' }}" placeholder="Job Role" />
+        <label>Start Date:</label>
+        <input type="date" name="employment_start_date[]" value="{{ entry.employment_start_date|date:'Y-m-d'|default:'' }}"/>
+        <label>End Date:</label>
+        <input type="date" name="employment_end_date[]" value="{{ entry.employment_end_date|date:'Y-m-d'|default:'' }}"/>
+
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'employment', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'employment')">Delete</button>
+    {% endif %}
+  
+
+</div>

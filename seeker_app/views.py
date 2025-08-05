@@ -9,7 +9,10 @@ from django.contrib import messages
 from company_app.models import Job
 from django.http import HttpResponse
 from django.http import JsonResponse
-
+import datetime
+from django.db import transaction
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 def seeker_jobs(request):
@@ -174,91 +177,114 @@ def seeker_forgot_password(request):
     return render(request, 'seeker_forgot_password.html',context)
 
 
+def _handle_multi_entry_section(request, seeker, config):
+
+    model = config['model']
+    post_fields = config['post_fields']
+    model_fields = config['model_fields']
+    required_fields_check = config.get('required_fields', [model_fields[0]])
+    type_conversions = config.get('type_conversions', {})
+
+    data_lists = [request.POST.getlist(field) for field in post_fields]
+
+    model.objects.filter(seeker=seeker).delete()
+
+    for values in zip(*data_lists):
+        row_data = dict(zip(model_fields, values))
+        if not any(row_data.get(field) for field in required_fields_check):
+            continue
+        for field_name, conversion_type in type_conversions.items():
+            value = row_data.get(field_name)
+            if value:
+                if conversion_type == 'date':
+                    row_data[field_name] = datetime.datetime.strptime(value, "%Y-%m-%d")
+                elif conversion_type == 'float':
+                    row_data[field_name] = float(value)
+                elif conversion_type == 'int':
+                    row_data[field_name]= int(value)
+            else:
+                row_data[field_name] = None
+        
+        model.objects.create(seeker=seeker, **row_data)
+
+EDUCATION_CONFIG = {
+            'model': SeekerEducation,
+            'post_fields': ["degree[]", "institution[]", "year_of_starting[]", "year_of_passing[]", "marks[]"],
+            'model_fields': ['degree', 'institution', 'year_of_starting', 'year_of_passing', 'marks'],
+            'required_fields': ['degree', 'institution'],
+            'type_conversions': {
+                'year_of_starting': 'date',
+                'year_of_passing': 'date',
+                'marks': 'float'
+            }
+        }
+        
+LANGUAGE_CONFIG = {
+            'model': SeekerLanguage,
+            'post_fields': ["language_name[]", "proficiency[]"],
+            'model_fields': ['language_name', 'proficiency'],
+        }
+INTERNSHIP_CONFIG = {
+           'model': SeekerInternship,
+            'post_fields': ['company_name[]', "role[]", 'duration[]'],
+            'model_fields': ['company_name', 'role', 'duration'],
+            'required_fields': ['company_name', 'duration'],
+}
+
+ACADEMIC_CONFIG ={
+     'model': SeekerAcademicAchievement,
+            'post_fields': ['achievement[]'],
+            'model_fields': ['achievement'],
+            'required_fields': ['achievement'],
+}
+        
+PROJECT_CONFIG = {
+            'model': SeekerProject,
+            'post_fields': ["project_title[]", "project_description[]"],
+            'model_fields': ['project_title', 'project_description'],
+        }
+
+EXAM_CONFIG = {
+            'model': SeekerCompetitiveExam,
+            'post_fields': ["exam_name[]", "competitive_score[]"],
+            'model_fields': ['exam_name', 'competitive_score'],
+            'type_conversions': {'competitive_score': 'float'}
+        }
+
+EMPLOYMENT_CONFIG = {
+            'model': SeekerProfileEmployment,
+            'post_fields': ['employment_company_name[]', "employment_role[]", 'employment_start_date[]', "employment_end_date[]"],
+            'model_fields': ['employment_company_name', 'employment_role', 'employment_start_date', 'employment_end_date'],
+            'required_fields': ['employment_company_name', 'employment_role'],
+            'type_conversions': {
+                'employment_start_date': 'date',
+                'employment_end_date': 'date'
+            }
+        }
+
+        
 def seeker_profile(request):
     seeker = Seeker.objects.get(email_id = request.user.email)
     
     
-    if request.method =="POST":
-        degrees = request.POST.getlist("degree[]")
-        institutions = request.POST.getlist("institution[]")
-        starting_years = request.POST.getlist("year_of_starting[]")
-        passing_years = request.POST.getlist("year_of_passing[]")
-        marks_list = request.POST.getlist("marks[]")
-
-        
-        language_name = request.POST.get("language_name")
-        proficiency = request.POST.get("proficiency")
-        
-        project_title = request.POST.get("project_title")
-        project_description = request.POST.get("project_description")
-        
-        exam_name = request.POST.get('exam_name')
-        competitive_score = request.POST.get("competitive_score")
-        
-        employment_company_name = request.POST.get('employment_company_name')
-        employment_role = request.POST.get("employment_role")
-        employment_start_date = request.POST.get('employment_start_date')
-        employment_end_date = request.POST.get("employment_end_date")
-
-
-                
-        for i in range(len(degrees)):
-            degree = degrees[i]
-            institution = institutions[i]
-            year_of_starting = starting_years[i] or None
-            year_of_passing = passing_years[i] or None
-            marks = marks_list[i] or None
-
-            # Skip empty or incomplete entries
-            if not degree and not institution:
-                continue
-            exists = SeekerEducation.objects.filter(
-                degree=degree,
-                institution=institution,
-                seeker=seeker
-            ).exists()
-            if exists:
-                continue  
+    if request.method =="POST":     
+        try:
+            with transaction.atomic():
+                _handle_multi_entry_section(request, seeker, EDUCATION_CONFIG)
+                _handle_multi_entry_section(request, seeker, LANGUAGE_CONFIG)
+                _handle_multi_entry_section(request, seeker, PROJECT_CONFIG)
+                _handle_multi_entry_section(request, seeker, INTERNSHIP_CONFIG)
+                _handle_multi_entry_section(request, seeker, ACADEMIC_CONFIG)
+                _handle_multi_entry_section(request, seeker, EXAM_CONFIG)
+                _handle_multi_entry_section(request, seeker, EMPLOYMENT_CONFIG)
             
-            
-            SeekerEducation.objects.create(
-                degree=degree,
-                institution=institution,
-                year_of_starting=year_of_starting,
-                year_of_passing=year_of_passing,
-                marks=marks,
-                seeker=seeker
-            )
+            messages.success(request, "Profile updated successfully!")
+            return redirect('seeker_profile')
 
-        
-        language = SeekerLanguage.objects.create(
-            language_name = language_name,
-            proficiency = proficiency,
-            seeker= seeker,
-        )
-        language.save()
-        
-        project = SeekerProject.objects.create(
-            project_title = project_title,
-            project_description = project_description,
-            seeker= seeker,
-        )
-        project.save()
+        except Exception as e:
+            messages.error(request, f"An error occurred: {e}")
             
-        competitive = SeekerCompetitiveExam.objects.create(
-            exam_name = exam_name,
-            competitive_score = float(competitive_score) if competitive_score!="" else 0,
-            seeker = seeker,
-        )
-        competitive.save()
-        
-        employment = SeekerProfileEmployment.objects.create(
-            employment_company_name = employment_company_name,
-            employment_role = employment_role,
-            employment_start_date = employment_start_date,
-            employment_end_date = employment_end_date,
-            seeker= seeker,
-        )
+        return redirect('/seeker_app/seeker_profile')
         
     context = {
         'seeker': seeker,
@@ -270,16 +296,43 @@ def seeker_profile(request):
         'employments': SeekerProfileEmployment.objects.filter(seeker=seeker),
         'achievements': SeekerAcademicAchievement.objects.filter(seeker=seeker),
     }
-    print( "Total ed1",SeekerEducation.objects.filter(seeker=seeker)[0].id) 
     return render(request,"seeker_profile.html", context)
 
+DELETABLE_MODELS = {
+    'education': SeekerEducation,
+    'language': SeekerLanguage,
+    'project': SeekerProject,
+    'exam': SeekerCompetitiveExam,
+    'employment': SeekerProfileEmployment,
+    'internship':SeekerInternship,
+    "achievement":SeekerAcademicAchievement
+    # Add any other models you want to make deletable here
+}
 
-def delete_education(request, edu_id):
-    if request.method == 'POST':
-        try:
-            edu = SeekerEducation.objects.get(id=edu_id)
-            print("Edu to delete",edu)
-            edu.delete()
-            return JsonResponse({'status': 'ok'})
-        except SeekerEducation.DoesNotExist:
-            return JsonResponse({'status': 'not found'})
+
+@login_required
+@require_POST
+def delete_field(request, field, pk):
+    # 1. Look up the model class from our secure map
+    model_class = DELETABLE_MODELS.get(field)
+
+    # 2. If the field name is not in our map, it's an invalid request.
+    if not model_class:
+        return JsonResponse({'status': 'error', 'message': 'Invalid field type.'}, status=400)
+
+    # 3. Get the seeker profile linked to the logged-in user
+
+    try:
+        # 4. Securely get the object, ensuring it belongs to the current seeker
+        obj = model_class.objects.get(pk=pk)
+        
+        # 5. Delete the object and return success
+        obj.delete()
+        return JsonResponse({'status': 'ok', 'message': 'Entry deleted successfully.'})
+    
+    except model_class.DoesNotExist:
+        # 6. If the object doesn't exist or doesn't belong to the user, return a 404 error.
+        return JsonResponse({'status': 'error', 'message': 'Object not found.'}, status=404)
+    except Exception as e:
+        # Catch any other potential errors
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)

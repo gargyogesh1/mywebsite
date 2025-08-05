@@ -1,0 +1,18 @@
+<div id="project-entry-filled" class="form-entry pt-4" >
+    <label>Title:</label>
+        <input type="text" name="project_title[]" value="{{ entry.project_title|default:'' }}" placeholder="Project Title" required />
+        <label>Description:</label>
+        <input type='text' name="project_description[]" value="{{ entry.project_title|default:'' }}" placeholder="Describe your project"/>
+
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'project', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'project')">Delete</button>
+    {% endif %}
+  
+
+</div>

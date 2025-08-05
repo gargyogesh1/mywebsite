@@ -1,0 +1,21 @@
+<div id="internship-entry-filled" class="form-entry pt-4" >
+    <hr>
+    <label>Company Name :</label>
+    <input type="text" name="company_name[]" value="{{ entry.company_name|default:'' }}" placeholder="e.g., Facebook" required />
+   <label>Role :</label>
+    <input type="text" name="role[]" value="{{ entry.role|default:'' }}" placeholder="e.g., Software Developer" />
+     <label>Duration (in months) :</label>
+    <input type="text" name="duration[]" value="{{ entry.duration|default:'' }}" placeholder="e.g., 6" required/>
+   
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'internship', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'internship')">Delete</button>
+    {% endif %}
+  
+
+</div>

@@ -1,0 +1,16 @@
+<div id="achievement-entry-filled" class="form-entry pt-4" >
+
+    <input name="achievement[]" value="{{ entry.achievement|default:'' }}"  placeholder="List your academic achievements" required />
+
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'achievement', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'achievement')">Delete</button>
+    {% endif %}
+  
+
+</div>

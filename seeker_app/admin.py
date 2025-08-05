@@ -8,6 +8,8 @@ admin.site.register(SeekerLanguage)
 admin.site.register(SeekerProject)
 admin.site.register(SeekerCompetitiveExam)
 admin.site.register(SeekerProfileEmployment)
+admin.site.register(SeekerAcademicAchievement)
+admin.site.register(SeekerInternship)
 
 
 

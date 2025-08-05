@@ -1,0 +1,28 @@
+
+<div id="language-entry-filled" class="form-entry pt-4" >
+    <hr>
+    <label>Language:</label>
+    <input type="text" name="language_name[]" value="{{ entry.language_name|default:'' }}" placeholder="e.g., English" />
+    <label>Proficiency:</label>
+    <select name="proficiency[]">
+                {% with value=entry.proficiency|default:'' %}
+
+    <option value="basic" {% if value == 'basic' %}selected{% endif %} >Basic</option>
+    <option value="intermediate" {% if value == 'intermediate' %}selected{% endif %}>Intermediate</option>
+    <option value="advanced" {% if value == 'advanced' %}selected{% endif %}>Advanced</option>
+      {% endwith %}
+
+</select>
+
+
+    {# Conditionally render the delete button's onclick behavior #}
+    {% if entry.id %}
+        {# This is an existing entry from the DB, so it has an ID #}
+        <button type="button" onclick="deleteFormEntry(this, 'language', {{ entry.id }})">Delete</button>
+    {% else %}
+        {# This is a new template entry, so it has no ID yet #}
+        <button type="button" onclick="deleteFormEntry(this, 'language')">Delete</button>
+    {% endif %}
+  
+
+</div>

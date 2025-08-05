@@ -46,7 +46,7 @@ class SeekerEducation(models.Model):
     institution = models.CharField(max_length=255,null=True)
     year_of_starting = models.DateField(null=True, blank=True)
     year_of_passing = models.DateField(null=True, blank=True)
-    marks = models.IntegerField(null=True)
+    marks = models.FloatField(null=True)
     def __str__(self):
         return f"{self.degree} from {self.institution} of {self.seeker.email_id}"
 
@@ -77,7 +77,7 @@ class SeekerProject(models.Model):
     project_title = models.CharField(max_length=255)
     project_description = models.TextField(null=True, blank=True)
     def __str__(self):
-        return self.project_title
+        return  f"{self.id} {self.project_title}"
     
 
 class SeekerCompetitiveExam(models.Model):
