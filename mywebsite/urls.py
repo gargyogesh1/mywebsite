@@ -22,7 +22,8 @@ urlpatterns = [
     
     # path('company_register/', views.company_register,name='company_register'),
     # path('company_login/',views.company_login,name="company_login"),
-    
+    path("__reload__/", include("django_browser_reload.urls")),
+
     re_path(r'.*/logout/$', views.logout_view, name='logout'),
 
 ]

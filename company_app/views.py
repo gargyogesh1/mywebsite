@@ -217,7 +217,7 @@ def company_login(request):
         email=request.POST.get('email')
         password = request.POST.get('password')
         # TODO: later validation
-        if "@gmail.com" in email:
+        if "@gmail.com" in email and False:
             messages.error(request,"Its not be a official email id")
             return redirect('company_login')
         else:
@@ -307,6 +307,5 @@ from .models import Job
 def card_detail(request, unique_number):
     # Retrieve the specific card using the unique_id
     job = get_object_or_404(Job, unique_number=unique_number)
-    
     # Render the template with the job details
     return render(request, 'card_detail.html', {'job': job})

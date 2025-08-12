@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.core.validators import RegexValidator, EmailValidator
 from django.forms import ValidationError
+from seeker_app.models import Seeker
 
 # Validator for official email
 def validate_official_email(value):
@@ -40,7 +41,7 @@ class Company(models.Model):
         null=False,
         validators=[validate_official_email]
     )
-    website = models.URLField(blank=True)
+    website = models.URLField(blank=True,)
     address = models.TextField()
     industry = models.CharField(max_length=100, choices=INDUSTRY_CHOICES)
     number_of_employees = models.CharField(max_length=20, choices=EMPLOYEE_CHOICES)
@@ -49,6 +50,7 @@ class Company(models.Model):
         max_length=15,
         unique=True,
         null=True,
+        blank=True,
         validators=[RegexValidator(r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$', "Enter a valid GST number.")]
     )
     is_verified=models.BooleanField(default=False,null=True)
@@ -56,6 +58,7 @@ class Company(models.Model):
         max_length=10,
         unique=True,
         null=True,
+        blank=True,
         validators=[RegexValidator(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$', "Enter a valid PAN number.")]
     )
     company_logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
@@ -110,3 +113,70 @@ class Job(models.Model):
 
     def __str__(self):
         return self.job_title
+
+
+class JobApplication(models.Model):
+    seeker = models.ForeignKey(
+        Seeker, 
+        on_delete=models.CASCADE, 
+        related_name='applications'
+    )
+    job = models.ForeignKey(
+        Job, 
+        on_delete=models.CASCADE, 
+        related_name='applications'
+    )
+    applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20, 
+        choices=[
+            ('pending', 'Pending'),
+            ('accepted', 'Accepted'),
+            ('rejected', 'Rejected'),
+            ('interview', 'Interview Scheduled')
+        ],
+        default='pending'
+    )
+    resume = models.FileField(
+        upload_to='job_application_resumes/',
+        null=True,
+        blank=True
+    )
+    cover_letter = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f"Application {self.job.job_title} : {self.seeker.full_name}"
+
+
+    class Meta:
+        unique_together = ('seeker', 'job')
+        
+        
+class JobQuestion(models.Model):
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name='questions'
+    )
+    question_text = models.CharField(max_length=500)
+    
+    def __str__(self):
+        return f"Question for {self.job.job_title}: {self.question_text}"
+
+class ApplicationAnswer(models.Model):
+    application = models.ForeignKey(
+        JobApplication,
+        on_delete=models.CASCADE,
+        related_name='answers'
+    )
+    question = models.ForeignKey(
+        JobQuestion,
+        on_delete=models.CASCADE
+    )
+    answer_text = models.TextField()
+
+    class Meta:
+        unique_together = ('application', 'question')

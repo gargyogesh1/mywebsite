@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from .models import *
 from mywebsite.models import *
+from company_app.models import *
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # Create your views here.
@@ -336,3 +337,48 @@ def delete_field(request, field, pk):
     except Exception as e:
         # Catch any other potential errors
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+def seeker_card_detail(request, unique_number):
+    job = get_object_or_404(Job, unique_number=unique_number)
+    
+    # Render the template with the job details
+    return render(request, 'seeker_card_detail.html', {'job': job})
+
+@login_required
+def apply_for_job(request, job_id):
+    if request.method == 'POST':
+        job = get_object_or_404(Job, pk=job_id)
+        seeker = Seeker.objects.get(email_id = request.user.email)
+
+        # Check if the seeker has already applied to prevent duplicate applications
+        if not JobApplication.objects.filter(seeker=seeker, job=job).exists():
+            JobApplication.objects.create(
+                seeker=seeker,
+                job=job,
+                # Additional fields like resume and cover_letter can be handled here
+                # from a more complex form if needed.
+            )
+            # Redirect to a success page or the job detail page
+            return redirect('job_detail_success_page', job_id=job.id)
+        else:
+            # Handle case where the user has already applied
+            return redirect('already_applied_page', job_id=job.id)
+
+    # If it's not a POST request, you can render an error or just redirect
+    return redirect('job_detail', job_id=job_id)
+
+
+def job_detail_success(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    context = {
+        'job': job,
+    }
+    return render(request, 'job_detail_success.html', context)
+
+def job_detail_already_applied(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    context = {
+        'job': job,
+    }
+    
+    return render(request, 'job_detail_already_applied.html', context)

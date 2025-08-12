@@ -1,0 +1,77 @@
+
+
+{% extends "common.html" %}
+
+{% block title %}
+{{ job.job_title }} Details
+{% endblock %}
+{% block styles %}
+       .container {
+            max-width: 800px;
+            margin-top: 5%;
+         
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        strong {
+            color: #2980b9;
+        }
+        .highlight {
+            background-color: #e7f1ff;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .toggle-description {
+            cursor: pointer;
+            color: #2980b9;
+            text-decoration: underline;
+        }
+{% endblock %}
+
+{% block content %}
+<section>
+<div class="container p-4">
+        <div class="d-flex flex-row justify-content-between">
+            <h1>{{ job.job_title }}</h1>
+            <form action="{% url 'apply_for_job' job.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Apply for this Job</button>
+            </form>        
+        </div>
+        <p><strong>Posted by:</strong> {{ job.jobpost_name }}</p>
+        <p><strong>Email:</strong> <span class="highlight">{{ job.jobpost_email }}</span></p>
+        <p><strong>Phone:</strong> <span class="highlight">{{ job.jobpost_phoneno }}</span></p>
+        <p><strong>Designation:</strong> {{ job.jobpost_designation }}</p>
+        <p><strong>Workplace:</strong> {{ job.job_workplace }}</p>
+        <p><strong>Location:</strong> {{ job.job_location }}</p>
+        <p><strong>Type:</strong> {{ job.job_type }}</p>
+        <p><strong>Number of Openings:</strong> {{ job.job_no_opening }}</p>
+        <p><strong>Salary:</strong> {{ job.job_salary }}</p>
+        <p><strong>Experience:</strong> {{ job.job_experience }}</p>
+        <p><strong>Skills:</strong> {{ job.job_skills }}</p>
+        <p><strong>Description:</strong> <span id="description">{{ job.description }}</span></p>
+        <p class="toggle-description" onclick="toggleDescription()">Toggle Description</p>
+    </div>
+
+</section>
+    <script>
+        function toggleDescription() {
+            const description = document.getElementById('description');
+            if (description.style.display === 'none') {
+                description.style.display = 'block';
+            } else {
+                description.style.display = 'none';
+            }
+        }
+    </script>
+
+
+    {% endblock %}

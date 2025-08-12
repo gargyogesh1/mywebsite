@@ -1,0 +1,21 @@
+
+{% extends "common.html" %}
+{% block content %}
+<section class="d-flex flex-column align-items-center">
+<div class="card m-5 p-2 w-50">
+  <h1>Application Submitted Successfully! 🎉</h1>
+    <p>Thank you for your interest in the <strong>{{ job.job_title }}</strong> position at <strong>{{ job.company.name }}</strong>.</p>
+    <p>We have received your application and will review it shortly. We'll be in touch if your qualifications meet our needs.</p>
+    
+    <h2>Job Details</h2>
+    <ul>
+        <li><strong>Job Title:</strong> {{ job.job_title }}</li>
+        <li><strong>Company:</strong> {{ job.company.name }}</li>
+        <li><strong>Location:</strong> {{ job.job_location }}</li>
+        <li><strong>Workplace Type:</strong> {{ job.job_workplace }}</li>
+    </ul>
+
+    <a href="{% url 'seeker_jobs' %}">View More Jobs</a>
+</div>
+</section>
+{% endblock %}
