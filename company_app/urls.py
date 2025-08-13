@@ -12,5 +12,6 @@ urlpatterns = [
     path('company_front/',views.company_front,name="company_front"),
     path('card/<unique_number>/', views.card_detail, name='card_detail'),
     path('company_job/',views.company_job, name = 'company_job'),
-
+    path('all_job_applications/', views.all_job_applications, name='all_job_applications'),
+    path('job_applications/<unique_number>', views.job_applications, name='job_applications'),
 ]

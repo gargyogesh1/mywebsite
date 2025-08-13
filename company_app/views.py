@@ -6,6 +6,7 @@ import requests
 
 from .models import *
 from mywebsite.models import *
+from django.contrib.auth.decorators import login_required
 
 
 def company_job(request):
@@ -309,3 +310,47 @@ def card_detail(request, unique_number):
     job = get_object_or_404(Job, unique_number=unique_number)
     # Render the template with the job details
     return render(request, 'card_detail.html', {'job': job})
+
+# Assuming your user model is linked to a Company model
+@login_required
+def all_job_applications(request):
+    try:
+        print("job")
+        company = Company.objects.get(official_email = request.user.email)
+        print(company)
+        company_jobs = Job.objects.filter(company=company)
+        all_applications = JobApplication.objects.filter(job__in=company_jobs).order_by('-applied_at')
+
+        
+        context = {
+            'company': company,
+            'applications': all_applications,
+        }
+        return render(request, 'applications_dashboard.html', context)
+    except Company.DoesNotExist:
+        # Handle the case where the user is not a company, e.g., redirect to an error page
+        return render(request, 'company_app/not_a_company.html')
+
+# Assuming your user model is linked to a Company model
+@login_required
+def job_applications(request,unique_number):
+    try:
+        print("job")
+        company = Company.objects.get(official_email = request.user.email)
+        print(company)
+        job = get_object_or_404(Job, unique_number=unique_number)
+        print(job)
+        all_applications = JobApplication.objects.filter(job=job).order_by('-applied_at')
+
+        
+        context = {
+            'company': company,
+            'job':job,
+            'applications': all_applications,
+        }
+        return render(request, 'job_applications.html', context)
+    except Company.DoesNotExist:
+        # Handle the case where the user is not a company, e.g., redirect to an error page
+        return render(request, 'company_app/not_a_company.html')
+
+   

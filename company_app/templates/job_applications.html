@@ -1,0 +1,45 @@
+{% extends "company_common.html" %}
+{% block content %}
+
+<section class="w-100 d-flex flex-column align-items-center">
+    <div class="w-75 d-flex flex-column">
+<h1>Job Applications for {{ job.job_title }}</h1>
+    
+    {% if applications %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Applicant Name</th>
+                    <th>Email</th>
+                    <th>Applied At</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.job.job_title }}</td>
+                    <td>{{ application.seeker.full_name }}</td>
+                    <td>{{ application.seeker.email_id }}</td>
+                    <td>{{ application.applied_at }}</td>
+                    <td>{{ application.get_status_display }}</td>
+                    <td>
+                        <a href="{% url 'job_applications' application.job.unique_number %}">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    {% else %}
+        <p>No applications have been submitted yet.</p>
+    {% endif %}
+
+    <a href="{% url 'company_front' %}">Back to Dashboard</a>
+    </div>
+
+</section>
+
+{% endblock %}
