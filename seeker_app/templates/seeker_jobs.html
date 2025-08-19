@@ -1,94 +1,253 @@
 
 {% extends "common.html" %}
-{% block content %}
 
-    <style>
-        .jobcard {
-            width: 600px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            margin: 20px;
+{% block headCss %}
+<style>
+    .job-layout {
+            display: flex; /* Use flexbox for layout */
+            gap: 30px;     /* Space between the two columns */
+            flex-wrap: wrap; /* Allows columns to wrap to new lines on smaller screens */
+            align-items: flex-start; /* Aligns items to the top */
         }
-        .jobcard .jobcard-header {
+
+        /* Styles for the filters column on the left */
+        .job-filters {
+            flex: 0 0 30%; /* Do not grow, do not shrink, and have a base width of 300px */
+            position: sticky; /* Makes the filter section sticky as the user scrolls */
+            top: 20px;       /* Puts some space between the top of the viewport and the filter box */
+        }
+
+        /* Styles for the job listings column on the right */
+        .job-listings {
+            flex: 1; /* Allows this section to grow and take up the remaining space */
+        }
+   .card-container {
+                background-color: white;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                max-width: 700px; 
+        }
+        .content {
+            flex-grow: 1;
+        }
+        .header {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .company, .location {
+            color: #666;
+        }
+        .details {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .details span {
+        margin-bottom:10px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            color: #666;
+        }
+        .badge {
+            background-color: #ebf4ff;
+            color: #0073e6;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+        }
+        .footer {
+            margin-top: 15px;
+            color: #666;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .action-button {
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            display: flex;
             align-items: center;
         }
-        .jobcard .jobcard-header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-        }
-        .jobcard .jobcard-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-        }
-        .jobcard .jobcard-subtitle {
-            font-size: 14px;
-            color: #555;
-            margin: 4px 0;
-        }
-        .jobcard .jobcard-subtitle span {
-            color: #f39c12;
-        }
-        .jobcard .jobcard-body {
-            margin-top: 16px;
-            font-size: 14px;
+        .save-button {
+            background-color: #f1f1f1;
             color: #333;
         }
-        .jobcard .jobcard-footer {
-            margin-top: 16px;
-            font-size: 12px;
-            color: #777;
+        .apply-button {
+            background-color: #ece0f8;
+            color: #9c27b0;
         }
-        .jobcard .icon {
-            margin-right: 8px;
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-left: 20px;
         }
-        .jobcard .save {
-            color: #007bff;
-            cursor: pointer;
+        .icon {
+            margin-right: 5px;
         }
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            .job-layout {
+                flex-direction: column; /* Stacks columns vertically on small screens */
+            }
+            .job-filters {
+                flex-basis: auto; /* Reverts to automatic sizing on small screens */
+                position: static; /* Removes sticky positioning on small screens */
+            }
+        }
+
+      
+     
     </style>
-    <div class="container mt-5">
-        
+{% endblock %}
+
+{% block content %}
+
+    
+    <section class="jobs-listing p-5 mt-5">
         <h1>Job Listings</h1>
-        
-        <!-- Button to navigate to the profile page -->
-        
-        <!-- Button to add a new job -->
-        {% comment %} <a href="add-job.html" class="btn btn-success mb-3">Add New Job</a> {% endcomment %}
-        {% for job in job %}
-        <a href="{% url 'seeker_card_detail' job.unique_number %}">
-            <div class="jobcard">
 
-                <div class="jobcard-header">
-                    <div>
-                        <p class="jobcard-title">{{job.job_title}} - {{job.job_location}}</p>
-                        <p class="jobcard-subtitle">2coms <span>★ 3.8</span> | 446 Reviews</p>
-                    </div>
-                    <img src="logo.png" alt="Company Logo">
+        <div class="job-layout">
+          <div class="job-filters">
+            <h3>Filter Jobs</h3>
+         <form method="GET" action="{% url 'seeker_jobs' %}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="locationFilter" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="locationFilter" name="location" value="{{ selected_location|default:'' }}">
                 </div>
-                <div class="jobcard-body">
-                    <p><span class="icon">📅</span>{{ job.job_experience}} <span class="icon">💰</span>{{job.job_salary}} <span class="icon">📍</span>{{job.job_location}}</p>
-                    <p><span class="icon">📄</span>Graduate/Post Graduate with industry/domain and network operations experience...</p>
-                    <p>service operations · service assurance · order management · consulting · customer</p>
+                <div class="col-md-6">
+                    <label for="experienceFilter" class="form-label">Experience</label>
+                    <input type="text" class="form-control" id="experienceFilter" name="experience" value="{{ selected_experience|default:'' }}">
                 </div>
-                <div class="jobcard-footer d-flex justify-content-between" >
-                    <p>1 Day Ago</p>
-                    <span class="save btn">Apply</span>
+                
+                <div class="col-md-6">
+                    <label for="jobTypeFilter" class="form-label">Job Type</label>
+                    <select class="form-select" id="jobTypeFilter" name="job_type">
+                        <option value="">All Job Types</option>
+                        {% for value, label in job_type_choices %}
+                            <option value="{{ value }}" {% if value == selected_job_type %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+                
+                <div class="col-md-6">
+                    <label for="workplaceTypeFilter" class="form-label">Workplace</label>
+                    <select class="form-select" id="workplaceTypeFilter" name="workplace_type">
+                        <option value="">All Workplace Types</option>
+                        {% for value, label in workplace_type_choices %}
+                            <option value="{{ value }}" {% if value == selected_workplace_type %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            <div class="col-md-6">
+                <label for="salary-slider mb-3" class="form-label">Salary Range</label>
+                <div id="salary-slider"></div>
+                <div class="mt-2">
+                    <span id="min-salary-value" class="me-2"></span>
+                    <span id="max-salary-value"></span>
+                </div>
+                <input type="hidden" name="min_salary" id="min_salary_input">
+                <input type="hidden" name="max_salary" id="max_salary_input">
             </div>
-        </a>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
+                <a href="{% url 'seeker_jobs' %}" class="btn btn-secondary mt-3">Clear Filters</a>
+            </div>
+        </form>
+        </div>
+        <div class="job-listings">
+        {% for job in jobs %}
+        <div class="card-container">
+            <a href="{% url 'seeker_card_detail' job.unique_number %}">
+
+                <div class="content">
+                <div class="header">{{job.job_title}}</div>
+                <div class="company">{{job.company.name}}</div>
+                <div class="details">
+                    <span><i class="fas fa-briefcase icon"></i> {{ job.job_experience}}</span>
+                    <span><i class="fas fa-map-marker-alt icon"></i>{{job.job_location}}</span>
+                </div>
+                <span class="badge">Early Applicant</span>
+                <div class="footer">{{job.job_workplace}}</div>
+            </div>
+            {% comment %} <div class="logo">
+                <img src="${item.logo}" alt="Company Logo">
+            </div> {% endcomment %}
+            <div class="actions">
+                <button class="action-button save-button"><i class="far fa-bookmark icon"></i> Save</button>
+                <button class="action-button apply-button"><i class="fas fa-paper-plane icon"></i> Apply Now</button>
+            </div>
+
+            </a>
+        </div>
         {% endfor %}
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </div>
+        </div>
 
+    </section>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+
+     
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var salarySlider = document.getElementById('salary-slider');
+        var minSalaryInput = document.getElementById('min_salary_input');
+        var maxSalaryInput = document.getElementById('max_salary_input');
+        var minSalaryValue = document.getElementById('min-salary-value');
+        var maxSalaryValue = document.getElementById('max-salary-value');
+
+        // Set the initial values from Django context
+        var initialMin = "{{ min_salary|default:'0' }}";
+        var initialMax = "{{ max_salary|default:'100000' }}";
+
+        noUiSlider.create(salarySlider, {
+            start: [parseInt(initialMin), parseInt(initialMax)],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 100000
+            },
+            step: 1000,
+            tooltips: true,
+            format: {
+                to: function (value) {
+                    return Math.round(value);
+                },
+                from: function (value) {
+                    return Number(value);
+                }
+            }
+        });
+
+        // Update hidden inputs and display values on slider change
+        salarySlider.noUiSlider.on('update', function (values, handle) {
+            var minVal = Math.round(values[0]);
+            var maxVal = Math.round(values[1]);
+            
+            minSalaryInput.value = minVal;
+            maxSalaryInput.value = maxVal;
+            
+            minSalaryValue.innerHTML = 'Min: ' + minVal;
+            maxSalaryValue.innerHTML = 'Max: ' + maxVal;
+        });
+    });
+</script>
 {% endblock %}

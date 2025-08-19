@@ -1,289 +1,376 @@
 {% extends 'common.html' %}
 {% block headCss %}
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
+    .job-profile-section {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #f9f9f9, #e0eafc);
-      animation: fadeIn 1.5s ease-in-out;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      min-height: 100vh;
+      gap: 20px;
+      padding: 20px;
     }
     
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    .container {
-      width: 90%;
-      margin: 20px auto;
-      background: white;
+    .left-column {
+      flex: 4;
+      background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transform: translateY(0);
-      animation: slideUp 0.8s ease-in-out;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      height: fit-content;
     }
     
-    @keyframes slideUp {
-      from {
-        transform: translateY(30px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .profile-card {
+      margin-bottom: 20px;
     }
     
-    .header {
+    .profile-header {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .avatar {
+      background: #007bff;
+      color: #fff;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      animation: bounceIn 1.5s;
-    }
-    
-    @keyframes bounceIn {
-      0%,
-      20%,
-      50%,
-      80%,
-      100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
-    }
-    
-    .header h1 {
-      font-size: 28px;
-      margin: 0;
-    }
-    
-    .quick-links {
-      margin: 20px 0;
-      padding: 10px;
-      background: #f4f4f4;
-      border-radius: 10px;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .quick-links a {
-      text-decoration: none;
-      color: #007bff;
+      justify-content: center;
+      font-size: 20px;
       font-weight: bold;
-      transition: color 0.3s ease-in-out;
     }
     
-    .quick-links a:hover {
-      color: #ff5722;
-    }
-    
-    section h2 {
-      border-bottom: 2px solid #007bff;
-      padding-bottom: 10px;
-    }
-    
-    input,
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      transition: box-shadow 0.3s ease;
-    }
-    
-    input:focus,
-    textarea:focus {
-      box-shadow: 0 0 5px #007bff;
-    }
-    
-    .submit-btn {
-      background-color: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    
-    .submit-btn:hover {
-      background-color: #218838;
-    }
-    
-    /* Progress Bar */
-    .progress-container {
-      height: 8px;
-      background: #e0e0e0;
-      border-radius: 5px;
+    .update-warning {
+      background: #fff3cd;
+      padding: 10px;
+      border: 1px solid #ffeeba;
+      border-radius: 6px;
+      font-size: 14px;
       margin: 10px 0;
-      position: sticky;
+    }
+    
+    .profile-score {
+      background: #fafafa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    
+    .score-bar {
+      background: #ddd;
+      height: 10px;
+      border-radius: 5px;
+      margin: 8px 0;
+    }
+    
+    .score-fill {
+      background: #28a745;
+      height: 100%;
+      border-radius: 5px;
+    }
+    
+    /* Right Column */
+    .right-column {
+      flex: 8;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    /* Navbar inside Right */
+    .section-navbar {
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      /*position: sticky;*/
       top: 0;
       z-index: 10;
     }
     
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff7eb3, #ff5722);
-      border-radius: 5px;
-      transition: width 0.3s;
+    .section-navbar ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .section-navbar a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: 500;
+    }
+    
+    .section-navbar a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Cards */
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .tags span {
+      background: #e9ecef;
+      padding: 5px 10px;
+      border-radius: 6px;
+      margin: 5px;
+      display: inline-block;
+      font-size: 13px;
+    }
+    
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+    
+      .left-column,
+      .right-column {
+        flex: 100%;
+        width: 90%;
+      }
+    
+      .section-navbar ul {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+    
+    /* Styling for each form entry */
+    
+    /* Highlight filled forms */
+    .profile-entry-filled {
+      border-left: 5px solid #007bff; /* A nice blue highlight */
+    }
+    
+    /* Style for labels */
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #495057;
+      font-weight: 600;
+    }
+    
+    /* Style for all input fields and selects */
+    input[type='text'],
+    input[type='date'],
+    input[type='number'],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1.25rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+      font-size: 1rem;
+      color: #495057;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    /* Add focus styles to inputs */
+    input:focus,
+    select:focus {
+      border-color: #80bdff;
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    /* Style the buttons */
+    button {
+      background-color: #3e8da8; /* Red for delete button */
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    
+    button:hover {
+      background-color: #5acdf4;
+    }
+    
+    /* Style the horizontal rule for separation */
+    hr {
+      border: 0;
+      height: 1px;
+      background-color: #e0e0e0;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
     }
   </style>
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <!-- Header Section -->
-    <div class="header animate-header">
-      <div class="profile-photo">
-        <div class="photo-placeholder">Add Photo</div>
-        <input type="file" id="profile-photo" />
-      </div>
-      <div class="profile-info">
-        <h1>Seeker Profile Form</h1>
-        <p>Fill out the following sections to complete your profile</p>
-      </div>
-    </div>
-
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-
-    {% if messages %}
-      {% for message in messages %}
-        <p class="{{ message.tags }}">{{ message }}</p>
-      {% endfor %}
-    {% endif %}
-
-    <!-- Navigation Menu -->
-    <div class="quick-links animate-links">
-      <ul>
-        <li>
-          <a href="#preference">Preference</a>
-        </li>
-        <li>
-          <a href="#education">Education</a>
-        </li>
-        <li>
-          <a href="#skills">Key Skills</a>
-        </li>
-        <li>
-          <a href="#languages">Languages</a>
-        </li>
-        <li>
-          <a href="#internships">Internships</a>
-        </li>
-        <li>
-          <a href="#projects">Projects</a>
-        </li>
-        <li>
-          <a href="#summary">Profile Summary</a>
-        </li>
-        <li>
-          <a href="#accomplishments">Accomplishments</a>
-        </li>
-        <li>
-          <a href="#exams">Competitive Exams</a>
-        </li>
-        <li>
-          <a href="#employment">Employment</a>
-        </li>
-        <li>
-          <a href="#achievements">Academic Achievements</a>
-        </li>
-        <li>
-          <a href="#resume">Resume</a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Form Section -->
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-
-      <!-- Career Preferences -->
-      <section id="preference">
-        <h2>Your Career Preferences</h2>
-        <label>Preferred Job Type:</label>
-        <input type="text" name="job_type" placeholder="e.g., Full-Time" value="{{ profile.preference.name }}" />
-        <label>Preferred Location:</label>
-        <input type="text" name="location" placeholder="e.g., Delhi, NCR" />
-      </section>
-
-      <!-- Education -->
-      <section id="education">
-        <h2>Education</h2>
-        <div id="education-container" class="pb-4">
-          <button type="button" onclick="addFormEntry('education')">Add More Education</button>
-          <template id="education-entry">
-            {% include 'form_templates/education_form.html' %}
-          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
-
-          <div id="education-forms-container">
-            {% for edu in educations %}
-              {% include 'form_templates/education_form.html' with entry=edu %}
-            {% endfor %}
+  <section class="job-profile-section">
+    <div class="left-column">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar">{{ seeker.full_name }}</div>
+          <div>
+            <h2>{{ seeker.full_name }}</h2>
+            <p class="subtitle">{{ seeker.profile_summary }}</p>
+            {% comment %} <p class="subtext">
+              Self-Employed · Feb 2022 - Mar 2024<br />Rohtak
+            </p> {% endcomment %}
           </div>
         </div>
-      </section>
+        <p>
+          <strong>Total exp:</strong> 3 yrs 5 mos
+        </p>
+        <p>
+          <strong>Notice period:</strong> Immediate
+        </p>
+        <div class="update-warning">⚠ Profile is not visible to recruiter without the mandatory information</div>
+        <div class="contact-info">
+          <p>📞 {{ seeker.mobile_number }}</p>
+          <p>✉ {{ seeker.email_id }}</p>
+        </div>
+      </div>
 
-      <!-- Key Skills -->
-      <section id="skills">
-        <h2>Key Skills</h2>
-        <input type="text" name="skills" placeholder="e.g., HTML, CSS, JavaScript" />
-      </section>
+      <div class="profile-score">
+        <h3>Profile Score</h3>
+        <div class="score-bar">
+          <div class="score-fill" style="width:46%"></div>
+        </div>
+        <p>46% completed</p>
+        <ul>
+          <li>LinkedIn</li>
+          <li>Resume</li>
+          <li>Salary</li>
+          <li>Profile Picture</li>
+          <li>Preferred Location</li>
+        </ul>
+      </div>
+    </div>
 
-      <!-- Languages -->
-      <section id="languages">
-        <h2>Languages</h2>
-          <div id="language-container" class="pb-4">
-          <button type="button" onclick="addFormEntry('language')">Add More Languages</button>
-          <template id="language-entry">
-            {% include 'form_templates/language_form.html' %}
-          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+    <!-- Right Column -->
+    <div class="right-column">
+      <!-- Navbar at Top -->
+      <nav class="section-navbar">
+        <ul>
+          <li>
+            <a href="#update-profile">Update Profile</a>
+          </li>
+          <li>
+            <a href="#profile-summary">Profile Summary</a>
+          </li>
+          <li>
+            <a href="#skills">Skills</a>
+          </li>
+          <li>
+            <a href="#education">Education</a>
+          </li>
+          <li>
+            <a href="#languages">Languages</a>
+          </li>
+          <li>
+            <a href="#internships">Internships</a>
+          </li>
+          <li>
+            <a href="#projects">Projects</a>
+          </li>
+          <li>
+            <a href="#accomplishments">Accomplishments</a>
+          </li>
+          <li>
+            <a href="#exams">Competitive Exams</a>
+          </li>
+          <li>
+            <a href="#employment">Employment</a>
+          </li>
+          <li>
+            <a href="#achievements">Academic Achievements</a>
+          </li>
+          <li>
+            <a href="#social-links">Social Links</a>
+          </li>
+        </ul>
+      </nav>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-          <div id="language-forms-container">
-            {% for lang in languages %}
-              {% include 'form_templates/language_form.html' with entry=lang %}
+        <!-- Cards -->
+        <div class="card" id="update-profile">
+          <h3>Update your profile instantly!</h3>
+          <input type="file" class="upload-box" />
+          <button class="upload-btn">Upload Resume</button>
+        </div>
+
+        <div class="card" id="profile-summary">
+          <h3>Profile summary</h3>
+          <p class="placeholder">Add your profile summary</p>
+          <input class="p-1" name="summary" value="{{ seeker.profile_summary }}" placeholder="Write a brief profile summary" />
+        </div>
+
+        <div class="card" id="skills">
+          <h3>Skills</h3>
+          <div class="tags">
+            {% for skill in skills_list %}
+              <span>{{ skill }}</span>
             {% endfor %}
           </div>
         </div>
 
-      </section>
+        <div class="card" id="education">
+          <h3>Education</h3>
+          <div id="education-container" class="pb-1">
+            <button type="button" onclick="addFormEntry('education')">Add More Languages</button>
+            <template id="education-entry">
+              {% include 'form_templates/education_form.html' %}
+            </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
 
-   <section id="internships">
-        <h2>Internships Details</h2>
+            <div id="education-forms-container">
+              {% for edu in educations %}
+                {% include 'form_templates/education_form.html' with entry=edu %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
 
+        <div class="card" id="languages">
+          <h3>Languages</h3>
+          <div id="language-container" class="pb-1">
+            <button type="button" onclick="addFormEntry('language')">Add More Languages</button>
+            <template id="language-entry">
+              {% include 'form_templates/language_form.html' %}
+            </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+            <div id="language-forms-container">
+              {% for lang in languages %}
+                {% include 'form_templates/language_form.html' with entry=lang %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="internships">
+          <h2>Internships Details</h2>
 
           <div id="internship-container" class="pb-4">
-          <button type="button" onclick="addFormEntry('internship')">Add More internships</button>
-          <template id="internship-entry">
-            {% include 'form_templates/internship_form.html' %}
-          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+            <button type="button" onclick="addFormEntry('internship')">Add More internships</button>
+            <template id="internship-entry">
+              {% include 'form_templates/internship_form.html' %}
+            </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
 
-          <div id="internship-forms-container">
-            {% for field in internships %}
-              {% include 'form_templates/internship_form.html' with entry=field %}
-            {% endfor %}
+            <div id="internship-forms-container">
+              {% for field in internships %}
+                {% include 'form_templates/internship_form.html' with entry=field %}
+              {% endfor %}
+            </div>
           </div>
         </div>
-
-      </section>
-
-    
-
-      <!-- Competitive Exams -->
-      <section id="exams">
+      <div class="card" id="exams">
 
 
         <h2>Competitive Exams</h2>
@@ -302,10 +389,10 @@
           </div>
         </div>
         
-      </section>
+      </div>
 
-      <!-- Employment -->
-      <section id="employments">
+
+       <div class="card" id="employments">
         <h2>Employment</h2>
 
 
@@ -323,10 +410,9 @@
         </div>
 
 
-      </section>
+      </div>
 
-      <!-- Academic Achievements -->
-      <section id="achievements">
+      <div class="card" id="achievements">
         <h2>Academic Achievements</h2>
 
         <div id="achievement-container" class="pb-4">
@@ -341,10 +427,9 @@
             {% endfor %}
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Projects -->
-      <section id="projects">
+      <div class="card" id="projects">
         <h2>Projects</h2>
 
     <div id="project-container" class="pb-4">
@@ -360,27 +445,35 @@
           </div>
         </div>
 
-      </section>
+      </div>
 
-      <!-- Profile Summary -->
-      <section id="summary">
-        <h2>Profile Summary</h2>
-        <textarea name="summary" placeholder="Write a brief profile summary"></textarea>
-      </section>
+    <div class="card" id="social-links">
+      <h3>Social Links</h3>
+      <a href="https://github.com/gargyogesh1" target="_blank">GitHub Profile</a>
+    </div>
 
-      <!-- Resume -->
-      <section id="resume">
-        <h2>Resume</h2>
-        <label>Upload Resume:</label>
-        <input type="file" name="resume" />
-      </section>
+        <button type="submit" class="submit-btn">Submit Profile</button>
+      </form>
+    </div>
+  </section>
 
-      <!-- Submit -->
-      <button type="submit" class="submit-btn">Submit Profile</button>
-    </form>
-  </div>
+ 
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const scoreFill = document.querySelector('.score-fill')
+      let width = 0
+      const target = 46
+      const interval = setInterval(() => {
+        if (width >= target) {
+          clearInterval(interval)
+        } else {
+          width++
+          scoreFill.style.width = width + '%'
+        }
+      }, 20)
+    })
+    
     function addFormEntry(sectionPrefix) {
       // Looks for a template with an ID like "education-entry"
       const template = document.getElementById(`${sectionPrefix}-entry`)

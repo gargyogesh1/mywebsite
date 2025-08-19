@@ -14,10 +14,10 @@ class Seeker(models.Model):
     work_status = models.CharField(max_length=20, choices=WORK_STATUS_CHOICES)
     promotions = models.BooleanField(default=False)
     
-    seekerPreference = models.CharField(max_length=255,null=True)
-    seeker_skills = models.CharField(max_length=255,null=True)
-    profile_summary = models.TextField(max_length = 555 ,null=True)
-    resume = models.FileField(null=True )
+    seekerPreference = models.CharField(max_length=255,null=True,blank=True)
+    seeker_skills = models.CharField(max_length=255,null=True,blank=True)
+    profile_summary = models.TextField(max_length = 555 ,null=True,blank=True)
+    resume = models.FileField(null=True,blank=True)
     def clean(self):
         """
         Add custom validation logic here.

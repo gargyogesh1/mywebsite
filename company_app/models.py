@@ -83,7 +83,7 @@ class Job(models.Model):
         ('Hybrid','Hybrid'),
         ('Remote','Remote'),
     ]
-    job_type = [
+    job_type_choices = [
     ('Full-time', 'Full-time'),
     ('Part-time', 'Part-time'),
     ('Contract', 'Contract'),
@@ -91,7 +91,7 @@ class Job(models.Model):
     ('Other', 'Other'),
     ('Volunteer', 'Volunteer'),
     ('Internship', 'Internship'),
-]
+    ]
 
     jobpost_name = models.CharField(max_length=255)
     jobpost_phoneno = models.CharField(max_length=255)
@@ -101,7 +101,7 @@ class Job(models.Model):
     job_title = models.CharField(max_length=255)
     job_workplace = models.CharField(max_length=255 , choices=Workplace_type)
     job_location = models.CharField(max_length=255)
-    job_type = models.CharField(max_length=255 , choices=job_type)
+    job_type = models.CharField(max_length=255 , choices=job_type_choices)
     job_no_opening = models.CharField(max_length=255)
     job_salary  = models.CharField(max_length=255)
     job_experience = models.CharField(max_length=25, blank=True)

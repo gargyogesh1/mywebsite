@@ -1,0 +1,438 @@
+{% extends 'common.html' %}
+{% block headCss %}
+  <style>
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    .container {
+      width: 90%;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+      animation: slideUp 0.8s ease-in-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      animation: bounceIn 1.5s;
+    }
+    
+    @keyframes bounceIn {
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+    
+    .quick-links {
+      margin: 20px 0;
+      padding: 10px;
+      background: #f4f4f4;
+      border-radius: 10px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .quick-links a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      transition: color 0.3s ease-in-out;
+    }
+    
+    .quick-links a:hover {
+      color: #ff5722;
+    }
+    
+    section h2 {
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    
+    input,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: box-shadow 0.3s ease;
+    }
+    
+    input:focus,
+    textarea:focus {
+      box-shadow: 0 0 5px #007bff;
+    }
+    
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+      background-color: #218838;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      margin: 10px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff7eb3, #ff5722);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header animate-header">
+      <div class="profile-photo">
+        <div class="photo-placeholder">Add Photo</div>
+        <input type="file" id="profile-photo" />
+      </div>
+      <div class="profile-info">
+        <h1>Seeker Profile Form</h1>
+        <p>Fill out the following sections to complete your profile</p>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Navigation Menu -->
+    <div class="quick-links animate-links">
+      <ul>
+        <li>
+          <a href="#preference">Preference</a>
+        </li>
+        <li>
+          <a href="#education">Education</a>
+        </li>
+        <li>
+          <a href="#skills">Key Skills</a>
+        </li>
+        <li>
+          <a href="#languages">Languages</a>
+        </li>
+        <li>
+          <a href="#internships">Internships</a>
+        </li>
+        <li>
+          <a href="#projects">Projects</a>
+        </li>
+        <li>
+          <a href="#summary">Profile Summary</a>
+        </li>
+        <li>
+          <a href="#accomplishments">Accomplishments</a>
+        </li>
+        <li>
+          <a href="#exams">Competitive Exams</a>
+        </li>
+        <li>
+          <a href="#employment">Employment</a>
+        </li>
+        <li>
+          <a href="#achievements">Academic Achievements</a>
+        </li>
+        <li>
+          <a href="#resume">Resume</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Form Section -->
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Career Preferences -->
+      <section id="preference">
+        <h2>Your Career Preferences</h2>
+        <label>Preferred Job Type:</label>
+        <input type="text" name="job_type" placeholder="e.g., Full-Time" value="{{ profile.preference.name }}" />
+        <label>Preferred Location:</label>
+        <input type="text" name="location" placeholder="e.g., Delhi, NCR" />
+      </section>
+
+      <!-- Education -->
+      <section id="education">
+        <h2>Education</h2>
+        <div id="education-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('education')">Add More Education</button>
+          <template id="education-entry">
+            {% include 'form_templates/education_form.html' %}
+          </template>
+
+          <div id="education-forms-container">
+            {% for edu in educations %}
+              {% include 'form_templates/education_form.html' with entry=edu %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Key Skills -->
+      <section id="skills">
+        <h2>Key Skills</h2>
+        <input type="text" name="skills" placeholder="e.g., HTML, CSS, JavaScript" />
+      </section>
+
+      <!-- Languages -->
+      <section id="languages">
+        <h2>Languages</h2>
+          <div id="language-container" class="pb-1">
+          <button type="button" onclick="addFormEntry('language')">Add More Languages</button>
+          <template id="language-entry">
+            {% include 'form_templates/language_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="language-forms-container">
+            {% for lang in languages %}
+              {% include 'form_templates/language_form.html' with entry=lang %}
+            {% endfor %}
+          </div>
+        </div>
+
+      </section>
+
+   <section id="internships">
+        <h2>Internships Details</h2>
+
+
+          <div id="internship-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('internship')">Add More internships</button>
+          <template id="internship-entry">
+            {% include 'form_templates/internship_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="internship-forms-container">
+            {% for field in internships %}
+              {% include 'form_templates/internship_form.html' with entry=field %}
+            {% endfor %}
+          </div>
+        </div>
+
+      </section>
+
+    
+
+      <!-- Competitive Exams -->
+      <section id="exams">
+
+
+        <h2>Competitive Exams</h2>
+        
+
+         <div id="exam-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('exam')">Add More Exams</button>
+          <template id="exam-entry">
+            {% include 'form_templates/exam_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="exam-forms-container">
+            {% for field in exams %}
+              {% include 'form_templates/exam_form.html' with entry=field %}
+            {% endfor %}
+          </div>
+        </div>
+        
+      </section>
+
+      <!-- Employment -->
+      <section id="employments">
+        <h2>Employment</h2>
+         <div id="employment-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('employment')">Add More Employment</button>
+          <template id="employment-entry">
+            {% include 'form_templates/employment_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="employment-forms-container">
+            {% for field in employments %}
+              {% include 'form_templates/employment_form.html' with entry=field %}
+            {% endfor %}
+          </div>
+        </div>
+
+
+      </section>
+
+      <!-- Academic Achievements -->
+      <section id="achievements">
+        <h2>Academic Achievements</h2>
+
+        <div id="achievement-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('achievement')">Add More Achievements</button>
+          <template id="achievement-entry">
+            {% include 'form_templates/achievement_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="achievement-forms-container">
+            {% for field in achievements %}
+              {% include 'form_templates/achievement_form.html' with entry=field %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects">
+        <h2>Projects</h2>
+
+    <div id="project-container" class="pb-4">
+          <button type="button" onclick="addFormEntry('project')">Add More projects</button>
+          <template id="project-entry">
+            {% include 'form_templates/project_form.html' %}
+          </template> {# We include the form here with no 'entry' object, so it renders as an empty form #}
+
+          <div id="project-forms-container">
+            {% for field in projects %}
+              {% include 'form_templates/project_form.html' with entry=field %}
+            {% endfor %}
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Profile Summary -->
+      <section id="summary">
+        <h2>Profile Summary</h2>
+        <textarea name="summary" placeholder="Write a brief profile summary"></textarea>
+      </section>
+
+      <!-- Resume -->
+      <section id="resume">
+        <h2>Resume</h2>
+        <label>Upload Resume:</label>
+        <input type="file" name="resume" />
+      </section>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn">Submit Profile</button>
+    </form>
+  </div>
+
+  <script>
+    function addFormEntry(sectionPrefix) {
+      // Looks for a template with an ID like "education-entry"
+      const template = document.getElementById(`${sectionPrefix}-entry`)
+      const container = document.getElementById(`${sectionPrefix}-forms-container`)
+    
+      if (template && container) {
+        const clone = template.content.cloneNode(true)
+        container.appendChild(clone)
+      }
+    }
+    
+    function deleteFormEntry(button, sectionPrefix, entryId = null) {
+      const entryElement = button.closest('.form-entry')
+    
+      if (!entryElement) return
+    
+      if (confirm('Are you sure you want to delete this item?')) {
+        // If an entryId is provided, it's an existing item in the database.
+        if (entryId) {
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    
+          // Assumes a URL pattern like /your-app/delete_section/123/
+          fetch(`/seeker_app/delete_field/${sectionPrefix}/${entryId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': csrfToken,
+              'Content-Type': 'application/json'
+            }
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === 'ok') {
+                entryElement.remove()
+              } else {
+                alert(`Failed to delete: ${data.message || 'Unknown error'}`)
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error)
+              alert('An error occurred while trying to delete.')
+            })
+        } else {
+          // If no entryId, it's a new, unsaved item. Just remove it from the DOM.
+          entryElement.remove()
+        }
+      }
+    }
+    // Smooth Scrolling for Navigation Links
+    document.querySelectorAll('.quick-links a').forEach((link) => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault()
+        const section = document.querySelector(this.getAttribute('href'))
+        section.scrollIntoView({ behavior: 'smooth' })
+      })
+    })
+    
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      const progress = (scrollTop / scrollHeight) * 100
+      document.getElementById('progress-bar').style.width = progress + '%'
+    })
+  </script>
+{% endblock %}

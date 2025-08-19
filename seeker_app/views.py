@@ -7,19 +7,89 @@ from company_app.models import *
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # Create your views here.
-from company_app.models import Job
+from company_app.models import Job,JobApplication
 from django.http import HttpResponse
 from django.http import JsonResponse
 import datetime
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-
+from django.db.models.functions import Cast
+from django.db.models import IntegerField
 
 def seeker_jobs(request):
-    job = Job.objects.all()
-    print(job)
-    return render(request, 'seeker_jobs.html',{"job":job})
+    jobs = Job.objects.all()
+    if request.user.is_authenticated:
+        # Get a list of IDs for jobs the user has applied to
+        seeker = Seeker.objects.get(email_id = request.user.email)
+
+        applied_job_ids = JobApplication.objects.filter(seeker=seeker).values_list('job_id', flat=True)
+        
+        # Exclude those jobs from the queryset
+        jobs = jobs.exclude(id__in=applied_job_ids)
+        
+    # Get filter parameters from the request
+    location_filter = request.GET.get('location')
+    experience_filter = request.GET.get('experience')
+    job_type_filter = request.GET.get('job_type')
+    workplace_type_filter = request.GET.get('workplace_type')
+    min_salary = request.GET.get('min_salary')
+    max_salary = request.GET.get('max_salary')
+    print(f"Filter - {location_filter} {experience_filter} {job_type_filter} {workplace_type_filter} {min_salary} {max_salary}")
+    # Apply filters if they exist
+    if location_filter:
+        jobs = jobs.filter(job_location__icontains=location_filter)
+    
+    if experience_filter:
+        jobs = jobs.filter(job_experience__iexact=experience_filter)
+
+    if job_type_filter:
+        jobs = jobs.filter(job_type=job_type_filter)
+
+    if workplace_type_filter:
+        jobs = jobs.filter(job_workplace=workplace_type_filter)
+    
+    # Salary filter logic (assuming job_salary is a numerical field)
+    # If job_salary is a CharField, this requires more complex logic.
+    if min_salary:
+        jobs = jobs.annotate(
+            salary_int=Cast('job_salary', output_field=IntegerField())
+        ).filter(salary_int__gte=min_salary)
+
+    if max_salary:
+        jobs = jobs.annotate(
+            salary_int=Cast('job_salary', output_field=IntegerField())
+        ).filter(salary_int__lte=max_salary)
+
+
+
+    # Apply filters if they exist
+    if location_filter:
+        jobs = jobs.filter(job_location__icontains=location_filter)
+    
+    if experience_filter:
+        # Assuming experience is a number, e.g., '5 years'
+        # You might need more complex logic here depending on your data format
+        jobs = jobs.filter(job_experience__iexact=experience_filter)
+
+    # Pass the filtered jobs and the form data to the template
+    workplace_type_choices = Job.Workplace_type
+    job_type_choices = Job.job_type_choices
+    
+    context = {
+        'jobs': jobs,
+        'seeker':seeker,
+         'selected_location': location_filter,
+        'selected_experience': experience_filter,
+        'selected_job_type': job_type_filter,
+        'selected_workplace_type': workplace_type_filter,
+        'min_salary': min_salary,
+        'max_salary': max_salary,
+        'workplace_type_choices': workplace_type_choices,
+        'job_type_choices': job_type_choices,
+
+    }
+    return render(request, 'seeker_jobs.html',context=context)
 
 
 
@@ -286,9 +356,10 @@ def seeker_profile(request):
             messages.error(request, f"An error occurred: {e}")
             
         return redirect('/seeker_app/seeker_profile')
-        
+    skills_list=seeker.seeker_skills.split(",")
     context = {
         'seeker': seeker,
+        'skills_list':skills_list,
         'educations': SeekerEducation.objects.filter(seeker=seeker),
         'languages': SeekerLanguage.objects.filter(seeker=seeker),
         'internships': SeekerInternship.objects.filter(seeker=seeker),
