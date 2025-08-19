@@ -19,6 +19,7 @@ from django.db.models import IntegerField
 
 def seeker_jobs(request):
     jobs = Job.objects.all()
+    seeker= None
     if request.user.is_authenticated:
         # Get a list of IDs for jobs the user has applied to
         seeker = Seeker.objects.get(email_id = request.user.email)
@@ -79,7 +80,7 @@ def seeker_jobs(request):
     context = {
         'jobs': jobs,
         'seeker':seeker,
-         'selected_location': location_filter,
+        'selected_location': location_filter,
         'selected_experience': experience_filter,
         'selected_job_type': job_type_filter,
         'selected_workplace_type': workplace_type_filter,
@@ -147,6 +148,8 @@ def seeker_register(request):
         )
         user.first_name = full_name  # Optional: Set the user's first name
         user.save()
+        user = authenticate(request, username=email_id+"+seeker", password=password)
+        login(request, user)
         
         try:
             employee_group = Group.objects.get(name="Employee")  # Get the group
@@ -155,14 +158,8 @@ def seeker_register(request):
             errors.append("The 'Employee' group does not exist. Please contact admin.")
             employee_group = Group.objects.create(name="Employee")  # Create the group if it doesn't exist
             user.groups.add(employee_group)  # Assign the user to the group
-        return redirect(request, "seeker_register.html", {
-            "errors": errors,
-            "full_name": full_name,
-            "email_id": email_id,
-            "mobile_number": mobile_number,
-            "work_status": work_status,
-            "promotions": promotions
-        })
+        return redirect("seeker_jobs")
+    
   
             
      
@@ -356,9 +353,12 @@ def seeker_profile(request):
             messages.error(request, f"An error occurred: {e}")
             
         return redirect('/seeker_app/seeker_profile')
-    skills_list=seeker.seeker_skills.split(",")
+    skills_list = []
+    if seeker.seeker_skills  :   
+        skills_list =seeker.seeker_skills.split(",")
     context = {
         'seeker': seeker,
+        
         'skills_list':skills_list,
         'educations': SeekerEducation.objects.filter(seeker=seeker),
         'languages': SeekerLanguage.objects.filter(seeker=seeker),

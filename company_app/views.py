@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 def company_job(request):
     print(request.user.email)
     company = Company.objects.get(official_email = request.user.email)
+    print(company)
     if request.method == "POST":
             jobpost_name = request.POST.get('jobpost_name')
             jobpost_phoneno = request.POST.get('jobpost_phoneno')

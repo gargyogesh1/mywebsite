@@ -97,7 +97,7 @@
             <a href="{% url 'logout' %}">Logout</a>
             <i class='bx bxs-chevron-down js-arrow arrow '></i>
           <ul class="js-sub-menu sub-menu">
-            <li><a href="#">{{ request.user.get_username }}</a></li>
+            <li><a href="#">{{ request.user.email }}</a></li>
             {% comment %} {% for group in groups %}
             <li><a href="#">{{group.name}}</a></li>
             {% endfor %} {% endcomment %}
