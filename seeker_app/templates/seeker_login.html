@@ -1,39 +1,234 @@
 {% extends "common.html" %}
+{% load static %}
 
 {% block content %}
 
 <div class="seeker-login">
-    <div class="login-container">
-        <h2>Login Job Seeker</h2>
-        {% if messages %}
-            <div class="alert">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
+    <div class="container">
+        <div class="left">
+            <img src="{% static "images/images/seeker.png" %}" alt="Illustration">
+            <p>Create your profile now and be visible to the top recruiters in the world</p>
+        </div>
+        <div class="right">
+            <div class="register-link">
+                <span>New to Naukari? </span><a href="{% url 'seeker_register' %}">Register</a>
             </div>
-        {% endif %}
-        <form method="POST" action="{% url 'seeker_login' %}">
-            {% csrf_token %}
-            <input type="email" name="email" placeholder="Email ID / Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <div class="secondary-option"><a href="{% url 'seeker_forgot_password' %}">Forgot Password?</a></div>
-            <button type="submit">Login</button>
-            {% comment %} <div class="secondary-option">Use OTP to Login</div> {% endcomment %}
-            <div class="divider"><span>Or</span></div>
-            <a href="{% url 'google_login' %}">
-                <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png" 
-                     alt="Sign in with Google">
+            <h2>Login Job Seeker</h2>
 
-                    {% comment %} <div class="google-button">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
+            {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'seeker_login' %}">
+                {% csrf_token %}
+                
+                <div class="login-methods">
+                    {% comment %} <div class="login-method" onclick="window.location.href='{% url 'google_login' %}'"> {% endcomment %}
+                    <div class="login-method" onclick="window.location.href=''">
                         Sign in with Google
-                    </div> {% endcomment %}
-                    
-            </a>
+                    </div>
+                    {% comment %} <div class="login-method" onclick="window.location.href='{% url 'linkedin_login' %}'"> {% endcomment %}
+                    <div class="login-method" onclick="window.location.href=''">
+                        Sign in with LinkedIn
+                    </div>
+                </div>
 
-        </form>
+                <div class="input-group">
+                    <label>Email ID/Username</label>
+                    <input type="email" name="email" placeholder="Email ID / Username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    {% comment %} <span class="toggle-password" onclick="togglePassword()"><img src="https://via.placeholder.com/20" alt="Toggle Password"></span> {% endcomment %}
+                    <div class="password-link">
+                        <a href="{% url 'seeker_forgot_password' %}">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" onclick="handleLogin(event)" class="login-button">Login</button>
+
+                {% comment %} <div class="divider"><span>Or</span></div>
+
+                <a href="{% url 'google_login' %}">
+                    <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png" alt="Sign in with Google">
+                </a> {% endcomment %}
+            </form>
+
+            {% comment %} <div class="otp-link">
+                <a href="">Login via OTP</a>
+            </div> {% endcomment %}
+        </div>
     </div>
 </div>
 
-{% endblock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f8f8f8;
+    }
+    .container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 90%;
+        max-width: 1000px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+    .left, .right {
+        flex: 1;
+        min-width: 300px;
+        text-align: center;
+        margin: 10px;
+    }
+    .left img {
+        width: 250px;
+        margin-bottom: 20px;
+    }
+    .left p {
+        color: #666;
+        font-size: 14px;
+    }
+    .register-link {
+        text-align: right;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .register-link a {
+        color: #a905f7;
+        text-decoration: none;
+    }
+    .login-methods {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .login-method {
+        width: 48%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    input[type="email"], input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 5px;
+        transition: width 0.3s ease;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #7500c0;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .login-button.disabled {
+        background-color: #a05fcd;
+        cursor: not-allowed;
+    }
+    .password-link {
+        text-align: right;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+    .password-link a {
+        color: #a905f7;
+        text-decoration: none;
+        font-size: 12px;
+    }
+    .otp-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .otp-link a {
+        color: #a905f7;
+        text-decoration: none;
+    }
+    @media (max-width: 768px) {
+        .container {
+            flex-direction: column;
+        }
+        .login-method {
+            width: 100%;
+        }
+    }
+</style>
 
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.querySelector('.toggle-password img');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.src = 'https://via.placeholder.com/20?text=Hide'; // Placeholder for an eye-off icon
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.src = 'https://via.placeholder.com/20?text=Show'; // Placeholder for an eye icon
+        }
+    }
+
+    function handleLogin() {
+        const loginButton = document.querySelector('.login-button');
+        loginButton.textContent = 'Please wait...';
+        loginButton.classList.add('disabled');
+        loginButton.disabled = true;
+
+        setTimeout(() => {
+            loginButton.textContent = 'Login';
+            loginButton.classList.remove('disabled');
+            loginButton.disabled = false;
+        }, 2000);
+    }
+</script>
+<script>
+    function handleLogin(event) {
+        event.preventDefault(); // Prevent form submission for demonstration
+        const loginButton = document.querySelector('.login-button');
+        loginButton.textContent = 'Please wait...';
+        loginButton.classList.add('disabled');
+        loginButton.disabled = true;
+
+        setTimeout(() => {
+            loginButton.textContent = 'Login';
+            loginButton.classList.remove('disabled');
+            loginButton.disabled = false;
+            document.querySelector('form').submit(); // Uncomment to enable actual form submission
+        }, 500);
+    }
+</script>
+
+{% endblock %}

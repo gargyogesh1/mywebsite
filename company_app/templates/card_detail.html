@@ -1,75 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ job.job_title }} Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        p {
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        strong {
-            color: #2980b9;
-        }
-        .highlight {
-            background-color: #e7f1ff;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        .toggle-description {
-            cursor: pointer;
-            color: #2980b9;
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ job.job_title }} Details</title>
+  <style>
+    /* General Reset */
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f6fc;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .job-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .job-details p strong {
+      display: inline-block;
+      min-width: 140px;
+      color: #34495e;
+    }
+
+    /* Highlight text */
+    .highlight {
+      background: #e7f1ff;
+      color: #1a73e8;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    /* Description */
+    .description-box {
+      margin-top: 20px;
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 5px solid #1a73e8;
+    }
+
+    .description-box p {
+      margin-bottom: 0;
+      color: #555;
+    }
+
+    /* Toggle Button */
+    .toggle-description {
+      display: inline-block;
+      margin-top: 15px;
+      cursor: pointer;
+      color: #1a73e8;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .toggle-description:hover {
+      color: #0d47a1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .job-details {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 1.6rem; }
+    }
+
+
+
+
+    .job-card {
+  background: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.job-card h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.job-card p {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.skill {
+  display: inline-block;
+  background: #eef;
+  border-radius: 5px;
+  padding: 3px 8px;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>{{ job.job_title }}</h1>
-        <p><strong>Posted by:</strong> {{ job.jobpost_name }}</p>
-        <p><strong>Email:</strong> <span class="highlight">{{ job.jobpost_email }}</span></p>
-        <p><strong>Phone:</strong> <span class="highlight">{{ job.jobpost_phoneno }}</span></p>
-        <p><strong>Designation:</strong> {{ job.jobpost_designation }}</p>
-        <p><strong>Workplace:</strong> {{ job.job_workplace }}</p>
-        <p><strong>Location:</strong> {{ job.job_location }}</p>
-        <p><strong>Type:</strong> {{ job.job_type }}</p>
-        <p><strong>Number of Openings:</strong> {{ job.job_no_opening }}</p>
-        <p><strong>Salary:</strong> {{ job.job_salary }}</p>
-        <p><strong>Experience:</strong> {{ job.job_experience }}</p>
-        <p><strong>Skills:</strong> {{ job.job_skills }}</p>
-        <p><strong>Description:</strong> <span id="description">{{ job.description }}</span></p>
-        <p class="toggle-description" onclick="toggleDescription()">Toggle Description</p>
+  <div class="container">
+    <h1>{{ job.job_title }}</h1>
+
+    <!-- Job Information Grid -->
+    <div class="job-details">
+      <p><strong>Posted by:</strong> {{ job.jobpost_name }}</p>
+      <p><strong>Email:</strong> <span class="highlight">{{ job.jobpost_email }}</span></p>
+      <p><strong>Phone:</strong> <span class="highlight">{{ job.jobpost_phoneno }}</span></p>
+      <p><strong>Designation:</strong> {{ job.jobpost_designation }}</p>
+      <p><strong>Workplace:</strong> {{ job.job_workplace }}</p>
+      <p><strong>Location:</strong> {{ job.job_location }}</p>
+      <p><strong>Job Type:</strong> {{ job.job_type }}</p>
+      <p><strong>Openings:</strong> {{ job.job_no_opening }}</p>
+      <p><strong>Salary:</strong> {{ job.job_salary }}</p>
+      <p><strong>Experience:</strong> {{ job.job_experience }}</p>
+      <p><strong>Skills:</strong> {{ job.job_skills }}</p>
     </div>
 
-    <script>
-        function toggleDescription() {
-            const description = document.getElementById('description');
-            if (description.style.display === 'none') {
-                description.style.display = 'block';
-            } else {
-                description.style.display = 'none';
-            }
-        }
-    </script>
+    <!-- Description Section -->
+    {% comment %} <div class="description-box">
+      <p id="description">{{ job.description }}</p>
+    </div> {% endcomment %}
+
+    <div class="job-card">
+  <h2>{{ job.job_title }}</h2>
+  <p><strong>Type:</strong> {{ job.job_type }}</p>
+  <p><strong>Experience:</strong> {{ job.experience }}</p>
+  <p><strong>Location:</strong> {{ job.location }}</p>
+  <p><strong>Salary:</strong> ₹{{ job.salary_range }}</p>
+
+  <p><strong>Skills:</strong> 
+    {% for skill in job.skills %}
+      <span class="skill">{{ skill }}</span>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+
+  <hr>
+
+  <div class="job-description">
+    {{ job.job_description|safe|linebreaks }}
+  </div>
+</div>
+
+
+    <!-- Toggle Button -->
+    <a class="toggle-description" onclick="toggleDescription()">Toggle Description</a>
+  </div>
+
+  <script>
+    function toggleDescription() {
+      const description = document.getElementById('description');
+      if (description.style.display === 'none') {
+        description.style.display = 'block';
+      } else {
+        description.style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>

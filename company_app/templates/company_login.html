@@ -1,32 +1,191 @@
 {% extends "company_common.html" %}
-
+{% load static %}
 {% block content %}
 
-<div class="card company-login w-75 ">
-    <div class="login-container">
-        <h2>Login Company</h2>
-        {% if messages %}
-            <div class="alert">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-        <form method="POST" action="{% url 'company_login' %}">
-            {% csrf_token %}
-            {% comment %} TODO later email {% endcomment %}
-            <input type="text" name="email" placeholder="Company Email ID / Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <div class="secondary-option"><a href="{% url 'company_forgot_password' %}">Forgot Password?</a></div>
-            <button type="submit">Login</button>
-            {% comment %} <div class="secondary-option">Use OTP to Login</div> {% endcomment %}
-            <div class="divider"><span>Or</span></div>
-            <div class="google-button">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
-                Sign in with Google
-            </div>
-        </form>
+<div class="company-login">
+    <div class="container">
+        <div class="left">
+            <img src="{% static 'images/images/emp.png' %}" alt="Illustration">
+            <p>Access your company's dashboard and manage your postings effectively.</p>
+        </div>
+        <div class="right">
+            <h2>Login Company</h2>
+
+            {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'company_login' %}">
+                {% csrf_token %}
+                <div class="register-link" style="text-align: right;">
+                    <span>New to Naukari? </span><a href="{% url 'company_register' %}">Register</a>
+                </div>
+
+                <div class="input-group">
+                    <label>Company Email ID/Username</label>
+                    <input type="text" name="email" placeholder="Company Email ID / Username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <img src="{% static 'images/eye_icon.png' %}" alt="Toggle Password">
+                    </span>
+                    <div class="password-link">
+                        <a href="{% url 'company_forgot_password' %}">Forgot Password?</a>
+                    </div>
+                </div>
+
+                {% comment %} <button type="submit" class="login-button">Login</button> {% endcomment %}
+                <button type="submit" class="login-button" onclick="handleLogin(event)">Login</button>
+                <div class="divider"><span>Or</span></div>
+
+                <div class="google-button" onclick="window.location.href=''">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
+                    Sign in with Google
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f8f8f8;
+    }
+    .company-login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    .container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+    .left, .right {
+        flex: 1;
+        min-width: 300px;
+        text-align: center;
+        margin: 10px;
+    }
+    .left img {
+        width: 250px;
+        margin-bottom: 20px;
+    }
+    .left p {
+        color: #666;
+        font-size: 14px;
+    }
+    .input-group {
+        position: relative;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #7500c0;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .password-link {
+        text-align: right;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+    .password-link a {
+        color: #a905f7;
+        text-decoration: none;
+        font-size: 12px;
+    }
+    .divider {
+        text-align: center;
+        margin: 15px 0;
+    }
+    .google-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+    .google-button img {
+        height: 20px;
+        margin-right: 10px;
+    }
+    @media (max-width: 768px) {
+        .container {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.querySelector('.toggle-password img');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.src = '{% static "images/eye_off_icon.png" %}'; // Path for the eye-off icon
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.src = '{% static "images/eye_icon.png" %}'; // Path for the eye icon
+        }
+    }
+</script>
+<script>
+    function handleLogin(event) {
+        event.preventDefault(); // Prevent form submission for demonstration
+        const loginButton = document.querySelector('.login-button');
+        loginButton.textContent = 'Please wait...';
+        loginButton.classList.add('disabled');
+        loginButton.disabled = true;
+
+        setTimeout(() => {
+            loginButton.textContent = 'Login';
+            loginButton.classList.remove('disabled');
+            loginButton.disabled = false;
+            document.querySelector('form').submit(); // Uncomment to enable actual form submission
+        }, 500);
+    }
+</script>
 
 {% endblock %}

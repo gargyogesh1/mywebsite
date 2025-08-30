@@ -4,6 +4,52 @@
 <html lang="en">
 
 <head>
+  <script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.querySelector('.toggle-password img');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.src = 'https://via.placeholder.com/20?text=Hide'; // Placeholder for an eye-off icon
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.src = 'https://via.placeholder.com/20?text=Show'; // Placeholder for an eye icon
+        }
+    }
+
+    function handleLogin() {
+        const loginButton = document.querySelector('.login-button');
+        loginButton.textContent = 'Please wait...';
+        loginButton.classList.add('disabled');
+        loginButton.disabled = true;
+
+        setTimeout(() => {
+            loginButton.textContent = 'Login';
+            loginButton.classList.remove('disabled');
+            loginButton.disabled = false;
+        }, 2000);
+    }
+</script>
+  <script defer>
+document.addEventListener("DOMContentLoaded", function () {
+    const nextBtn = document.getElementById("nextBtn");
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+            let email = document.getElementById("email").value.trim();
+            let mobile = document.getElementById("mobile").value.trim();
+
+            if (email === "" || mobile === "") {
+                alert("Please fill Email and Mobile to continue.");
+                return;
+            }
+
+            document.getElementById("menu-step1").style.display = "none";
+            document.getElementById("menu-step2").style.display = "block";
+        });
+    }
+});
+</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}My Website{% endblock %}</title>

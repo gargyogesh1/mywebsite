@@ -1,0 +1,147 @@
+{% extends "common.html" %}
+{% comment %} 
+{% extends "common.html" %}
+{% block content %}
+
+<section class="job-seeker-register">
+    <div class="form-container">
+        <h1>Create your Naukri profile</h1>
+        <form action="/seeker_register/" method="POST">
+            {% csrf_token %}
+            <label for="name">Full name*</label>
+            <input type="text" id="name" name="name" placeholder="What is your name?">
+        
+            <label for="email">Email ID*</label>
+            <input type="email" id="email" name="email" placeholder="Tell us your Email ID">
+        
+            <label for="password">Password*</label>
+            <input type="password" id="password" name="password" placeholder="Minimum 6 characters">
+        
+            <label for="confirm_password">Confirm Password*</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Same as Password">
+        
+            <label for="mobile">Mobile number*</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number">
+        
+            <label>Work status*</label>
+            <div class="work-status">
+                <label><input type="radio" name="work_status" value="experienced"> I’m experienced</label>
+                <label><input type="radio" name="work_status" value="fresher"> I’m a fresher</label>
+            </div>
+        
+            <div class="checkbox-container">
+                <input type="checkbox" id="promotions" name="promotions">
+                <label for="promotions">Send me important updates & promotions via SMS, email, and WhatsApp</label>
+            </div>
+        
+            <p class="terms">
+                By clicking Register, you agree to the <a href="#">Terms and Conditions</a> & <a href="#">Privacy Policy</a>.
+            </p>
+        
+            <button type="submit">Register now</button>
+        </form>
+        
+        <div class="google-btn">
+            <button>
+                <span>Continue with</span> Google
+            </button>
+        </div>
+
+        <div class="footer-links">
+            <p><a href="#">About Us</a> | <a href="#">Contact Us</a> | <a href="#">FAQs</a> | <a href="#">Terms and Conditions</a></p>
+        </div>
+    </div>
+</section>
+
+{% endblock %} {% endcomment %}
+
+
+
+{% block content %}
+
+<section class="job-seeker-register">
+    <div class="form-container">
+        <h1>Create your Naukri profile</h1>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Full Name Field -->
+            <label for="name">Full name*</label>
+            <input type="text" id="name" name="name" placeholder="What is your name?" value="{{ full_name }}">
+            {% if errors and 'All fields marked with * are required.' in errors %}
+                <p class="error">This field is required.</p>
+            {% endif %}
+        
+            <!-- Email Field -->
+            <label for="email">Email ID*</label>
+            <input type="email" id="email" name="email" placeholder="Tell us your Email ID" value="{{ email_id }}">
+            {% if errors and 'Email is already registered.' in errors %}
+                <p class="error">This email is already registered.</p>
+            {% endif %}
+        
+            <!-- Password Field -->
+            <label for="password">Password*</label>
+            <input type="password" id="password" name="password" placeholder="Minimum 6 characters" value="{{ password }}">
+            {% if errors and 'Password and Confirm Password do not match.' in errors %}
+                <p class="error">Password and Confirm Password do not match.</p>
+            {% endif %}
+        
+            <!-- Confirm Password Field -->
+            <label for="confirm_password">Confirm Password*</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Same as Password" value="{{ confirm_password }}">
+        
+            <!-- Mobile Field -->
+            <label for="mobile">Mobile number*</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" value="{{ mobile_number }}">
+            {% if errors and 'All fields marked with * are required.' in errors %}
+                <p class="error">This field is required.</p>
+            {% endif %}
+        
+            <!-- Work Status Field -->
+            <label>Work status*</label>
+            <div class="work-status">
+                <label><input type="radio" name="work_status" value="experienced" {% if work_status == 'experienced' %}checked{% endif %}> I’m experienced</label>
+                <label><input type="radio" name="work_status" value="fresher" {% if work_status == 'fresher' %}checked{% endif %}> I’m a fresher</label>
+            </div>
+            {% if errors and 'All fields marked with * are required.' in errors %}
+                <p class="error">Please select a work status.</p>
+            {% endif %}
+        
+            <!-- Promotions Checkbox -->
+            <div class="checkbox-container">
+                <input type="checkbox" id="promotions" name="promotions" {% if promotions %}checked{% endif %}>
+                <label for="promotions">Send me important updates & promotions via SMS, email, and WhatsApp</label>
+            </div>
+        
+            <p class="terms">
+                By clicking Register, you agree to the <a href="#">Terms and Conditions</a> & <a href="#">Privacy Policy</a>.
+            </p>
+        
+            <button type="submit">Register now</button>
+        </form>
+        
+        <div class="google-btn">
+            <button>
+                <span>Continue with</span> Google
+            </button>
+        </div>
+
+        <div class="footer-links">
+            <p><a href="#">About Us</a> | <a href="#">Contact Us</a> | <a href="#">FAQs</a> | <a href="#">Terms and Conditions</a></p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+<style>
+    .error {
+        color: red;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+    .form-container input, .form-container label, .form-container button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+</style>

@@ -306,11 +306,49 @@ def company_front(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Job
 
+# def card_detail(request, unique_number):
+#     # Retrieve the specific card using the unique_id
+#     job = get_object_or_404(Job, unique_number=unique_number)
+#     print(job.description)
+#     # Render the template with the job details
+#     return render(request, 'job_detail.html', {'job': job})
+
+import json, re
+from django.shortcuts import render, get_object_or_404
+from .models import Job
+
 def card_detail(request, unique_number):
-    # Retrieve the specific card using the unique_id
-    job = get_object_or_404(Job, unique_number=unique_number)
-    # Render the template with the job details
-    return render(request, 'card_detail.html', {'job': job})
+    # 🔹 If unique_number is really unique, use get_object_or_404
+    # but if not, fallback to first match
+    job = Job.objects.filter(unique_number=unique_number).first()
+    if not job:
+        return render(request, "404.html", {"message": "Job not found."})
+
+    job_data = {}
+    if job.description:
+        raw_desc = job.description.strip()
+
+        # 🔹 remove markdown code block markers (```json ... ```)
+        if raw_desc.startswith("```"):
+            raw_desc = re.sub(r"^```[a-zA-Z]*\n", "", raw_desc, flags=re.MULTILINE)
+            raw_desc = re.sub(r"\n```$", "", raw_desc, flags=re.MULTILINE)
+
+        try:
+            job_data = json.loads(raw_desc)
+        except json.JSONDecodeError as e:
+            print("JSON ERROR:", e)
+            print("CLEANED DESCRIPTION:", raw_desc[:200], "...")
+            # fallback: just keep raw text
+            job_data = {"job_description": raw_desc}
+
+    print("JOB DATA:", job_data)
+
+    return render(request, "job_detail.html", {
+        "job": job,
+        "job_data": job_data
+    })
+
+
 
 # Assuming your user model is linked to a Company model
 @login_required

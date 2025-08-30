@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ job_data.job_title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+  <div class="max-w-4xl mx-auto py-10 px-4">
+    <!-- Job Card -->
+    <div class="bg-white shadow-lg rounded-2xl p-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ job_data.job_title }}</h1>
+      
+      <!-- Job Details -->
+      <div class="grid md:grid-cols-2 gap-6 text-gray-700">
+        <p><span class="font-semibold">Type:</span> {{ job_data.job_type }}</p>
+        <p><span class="font-semibold">Experience:</span> {{ job_data.experience }}</p>
+        <p><span class="font-semibold">Location:</span> {{ job_data.location }}</p>
+        <p><span class="font-semibold">Salary:</span> ₹{{ job_data.salary_range }}</p>
+      </div>
+
+      <!-- Skills -->
+      <div class="mt-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">Skills</h2>
+        {% if job_data.skills %}
+          <div class="flex flex-wrap gap-2">
+            {% for skill in job_data.skills %}
+              <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full shadow-sm">
+                {{ skill }}
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-gray-500">No skills provided</p>
+        {% endif %}
+      </div>
+
+      <!-- Job Description -->
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-3">Job Description</h2>
+        <div class="prose max-w-none text-gray-700">
+          {{ job_data.job_description|linebreaks }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
