@@ -10,6 +10,7 @@ admin.site.register(SeekerCompetitiveExam)
 admin.site.register(SeekerProfileEmployment)
 admin.site.register(SeekerAcademicAchievement)
 admin.site.register(SeekerInternship)
+admin.site.register(Skill)
 
 
 

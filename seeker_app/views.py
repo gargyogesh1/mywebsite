@@ -365,6 +365,11 @@ def seeker_profile(request):
     
     if request.method =="POST":     
         try:
+            profile_summary = request.POST.get("summary")
+            if profile_summary:
+                print("Profile summary updated.",profile_summary )
+                seeker.profile_summary = profile_summary
+                seeker.save()
             with transaction.atomic():
                 _handle_multi_entry_section(request, seeker, EDUCATION_CONFIG)
                 _handle_multi_entry_section(request, seeker, LANGUAGE_CONFIG)
@@ -382,8 +387,9 @@ def seeker_profile(request):
             
         return redirect('/seeker_app/seeker_profile')
     skills_list = []
-    if seeker.seeker_skills  :   
-        skills_list =seeker.seeker_skills.split(",")
+    if seeker.skills.exists():
+        skills_list = list(seeker.skills.all())
+        
     context = {
         'seeker': seeker,
         
@@ -487,3 +493,45 @@ def job_detail_already_applied(request, job_id):
     }
     
     return render(request, 'job_detail_already_applied.html', context)
+
+
+import json
+
+@login_required
+@require_POST
+def add_skill(request):
+    try:
+        data = json.loads(request.body)
+        skill_name = data.get('skill_name')
+        
+        seeker = Seeker.objects.get(email_id=request.user.email)
+        
+        if skill_name:
+            skill, created = Skill.objects.get_or_create(name=skill_name)
+            seeker.skills.add(skill)
+            return JsonResponse({'success': True, 'skill_id': skill.id})
+        else:
+            return JsonResponse({'success': False, 'error': 'Skill name is required.'})
+    except Seeker.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Seeker profile not found.'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@login_required
+@require_POST
+def remove_skill(request, skill_id):
+    try:
+        seeker = Seeker.objects.get(email_id=request.user.email)
+        skill = Skill.objects.get(id=skill_id)
+        
+        seeker.skills.remove(skill)
+        
+        # Optionally, delete the skill if no other seekers have it
+        if not skill.seekers.exists():
+            skill.delete()
+            
+        return JsonResponse({'success': True})
+    except (Seeker.DoesNotExist, Skill.DoesNotExist):
+        return JsonResponse({'success': False, 'error': 'Skill or seeker not found.'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

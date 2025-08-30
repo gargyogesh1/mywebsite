@@ -15,7 +15,7 @@ class Seeker(models.Model):
     promotions = models.BooleanField(default=False)
     
     seekerPreference = models.CharField(max_length=255,null=True,blank=True)
-    seeker_skills = models.CharField(max_length=255,null=True,blank=True)
+    skills = models.ManyToManyField('Skill', related_name='seekers', blank=True)
     profile_summary = models.TextField(max_length = 555 ,null=True,blank=True)
     resume = models.FileField(null=True,blank=True)
     def clean(self):
@@ -30,7 +30,13 @@ class Seeker(models.Model):
     def __str__(self):
         return self.full_name
 
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+    
+    
 class SeekerEducation(models.Model):
     Education = [
         ('TENTH', '10th'),

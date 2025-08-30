@@ -208,6 +208,48 @@
       margin-top: 1.5rem;
       margin-bottom: 1.5rem;
     }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .skill-tag {
+      background-color: #e0e0e0;
+      border-radius: 15px;
+      padding: 5px 10px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .remove-skill {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .remove-skill:hover {
+      color: #000;
+    }
+
+    .add-skill-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #new-skill-input {
+      flex-grow: 1;
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
   </style>
 {% endblock %}
 
@@ -314,13 +356,23 @@
         </div>
 
         <div class="card" id="skills">
-          <h3>Skills</h3>
-          <div class="tags">
-            {% for skill in skills_list %}
-              <span>{{ skill }}</span>
-            {% endfor %}
-          </div>
+
+
+        <h3>Skills</h3>
+        <div class="tags" id="skills-container">
+          {% for skill in skills_list %}
+          <span class="skill-tag" data-skill-id="{{ skill.id }}">
+            {{ skill.name }}
+            <span class="remove-skill" data-skill-id="{{ skill.id }}">×</span>
+          </span>
+          {% endfor %}
         </div>
+
+        <div class="add-skill-section">
+          <input type="text" class="mt-4" id="new-skill-input" placeholder="Add a new skill">
+          <button class="px-3" id="add-skill-btn" type="button">Add</button>
+        </div>
+      </div>
 
         <div class="card" id="education">
           <h3>Education</h3>
@@ -536,5 +588,69 @@
       const progress = (scrollTop / scrollHeight) * 100
       document.getElementById('progress-bar').style.width = progress + '%'
     })
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const skillsContainer = document.getElementById('skills-container');
+    const newSkillInput = document.getElementById('new-skill-input');
+    const addSkillBtn = document.getElementById('add-skill-btn');
+
+    // Function to add a skill
+    addSkillBtn.addEventListener('click', () => {
+        const skillName = newSkillInput.value.trim();
+        if (skillName === '') {
+            return;
+        }
+
+        fetch('/seeker_app/add_skill/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ skill_name: skillName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const newSkillTag = document.createElement('span');
+                newSkillTag.className = 'skill-tag';
+                newSkillTag.dataset.skillId = data.skill_id;
+                newSkillTag.innerHTML = `
+                    ${skillName}
+                    <span class="remove-skill" data-skill-id="${data.skill_id}">×</span>
+                `;
+                skillsContainer.appendChild(newSkillTag);
+                newSkillInput.value = '';
+            } else {
+                console.error(data.error);
+            }
+        });
+    });
+
+    // Function to remove a skill
+    skillsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-skill')) {
+            const skillId = e.target.dataset.skillId;
+            fetch(`/seeker_app/remove_skill/${skillId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    e.target.parentNode.remove();
+                } else {
+                    console.error(data.error);
+                }
+            });
+        }
+    });
+});
+
+
   </script>
 {% endblock %}
