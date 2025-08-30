@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
+from django.db.models import Q
 
 def seeker_jobs(request):
     jobs = Job.objects.all()
@@ -30,6 +31,8 @@ def seeker_jobs(request):
         jobs = jobs.exclude(id__in=applied_job_ids)
         
     # Get filter parameters from the request
+    q_filter = request.GET.get('q') # New filter for the main search bar
+
     location_filter = request.GET.get('location')
     experience_filter = request.GET.get('experience')
     job_type_filter = request.GET.get('job_type')
@@ -38,6 +41,13 @@ def seeker_jobs(request):
     max_salary = request.GET.get('max_salary')
     print(f"Filter - {location_filter} {experience_filter} {job_type_filter} {workplace_type_filter} {min_salary} {max_salary}")
     # Apply filters if they exist
+    
+    if q_filter:
+        jobs = jobs.filter(
+            Q(job_skills__icontains=q_filter) |
+            Q(company__name__icontains=q_filter) |
+            Q(job_title__icontains=q_filter)
+        )
     if location_filter:
         jobs = jobs.filter(job_location__icontains=location_filter)
     
@@ -91,6 +101,24 @@ def seeker_jobs(request):
 
     }
     return render(request, 'seeker_jobs.html',context=context)
+
+
+
+def view_applications(request):
+    seeker= None
+    if request.user.is_authenticated:
+        # Get a list of IDs for jobs the user has applied to
+        seeker = Seeker.objects.get(email_id = request.user.email)
+
+    applied_job_ids = JobApplication.objects.filter(seeker=seeker).values_list('job_id', flat=True)
+    
+    jobs = Job.objects.filter(id__in=applied_job_ids)
+
+      
+    context = {
+            'jobs':jobs
+    }
+    return render(request, 'seeker_view_applications.html',context=context)
 
 
 
@@ -410,6 +438,12 @@ def delete_field(request, field, pk):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
 def seeker_card_detail(request, unique_number):
+    job = get_object_or_404(Job, unique_number=unique_number)
+    
+    # Render the template with the job details
+    return render(request, 'seeker_card_detail.html', {'job': job,"apply_job":True})
+
+def seeker_view_job_detail(request, unique_number):
     job = get_object_or_404(Job, unique_number=unique_number)
     
     # Render the template with the job details

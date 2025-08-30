@@ -41,10 +41,12 @@
 <div class="container p-4">
         <div class="d-flex flex-row justify-content-between">
             <h1>{{ job.job_title }}</h1>
+            {% if apply_job %}
             <form action="{% url 'apply_for_job' job.id %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-secondary" type="submit">Apply for this Job</button>
-            </form>        
+            </form>    
+            {% endif %}
         </div>
         <p><strong>Posted by:</strong> {{ job.jobpost_name }}</p>
         <p><strong>Email:</strong> <span class="highlight">{{ job.jobpost_email }}</span></p>
