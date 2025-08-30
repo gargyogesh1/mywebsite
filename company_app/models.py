@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import RegexValidator, EmailValidator
 from django.forms import ValidationError
 from seeker_app.models import Seeker
+import uuid
 
 # Validator for official email
 def validate_official_email(value):
@@ -108,7 +109,7 @@ class Job(models.Model):
     job_skills=models.CharField(max_length=255)
     description = models.TextField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
-    unique_number = models.CharField(default="0",max_length=255,null=True)
+    # unique_number = models.CharField(default="0",max_length=255,null=True)
     # unique_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, blank=True)
 
     def __str__(self):

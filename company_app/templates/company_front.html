@@ -74,7 +74,7 @@
         <a href="/company_app/company_job" class="btn btn-success mb-3">Add New Job</a>
         <a href="/company_app/all_job_applications" class="btn btn-success mb-3">View All Applications</a>
         {% for job in job %}
-        <a href="{% url 'card_detail' job.unique_number %}">
+        <a href="{% url 'card_detail' job.id %}">
             <div class="jobcard">
 
                 <div class="jobcard-header">
@@ -92,7 +92,7 @@
                 <div class="jobcard-footer">
                     <p>1 Day Ago <span class="save">💾 Save</span></p>
                 </div>
-                <a href="{% url 'job_applications' job.unique_number %}">View applications</a>
+                <a href="{% url 'job_applications' job.id %}">View applications</a>
             </div>
         </a>
 

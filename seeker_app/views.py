@@ -437,14 +437,14 @@ def delete_field(request, field, pk):
         # Catch any other potential errors
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
-def seeker_card_detail(request, unique_number):
-    job = get_object_or_404(Job, unique_number=unique_number)
+def seeker_card_detail(request, id):
+    job = get_object_or_404(Job, pk=id)
     
     # Render the template with the job details
     return render(request, 'seeker_card_detail.html', {'job': job,"apply_job":True})
 
-def seeker_view_job_detail(request, unique_number):
-    job = get_object_or_404(Job, unique_number=unique_number)
+def seeker_view_job_detail(request, id):
+    job = get_object_or_404(Job, pk=id)
     
     # Render the template with the job details
     return render(request, 'seeker_card_detail.html', {'job': job})

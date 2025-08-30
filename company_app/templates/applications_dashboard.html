@@ -25,7 +25,7 @@
                 <td>{{ application.applied_at }}</td>
                 <td>{{ application.get_status_display }}</td>
                 <td>
-                  <a href="{% url 'job_applications' application.job.unique_number %}">View Details</a>
+                  <a href="{% url 'job_applications' application.job.id %}">View Details</a>
                 </td>
               </tr>
             {% endfor %}

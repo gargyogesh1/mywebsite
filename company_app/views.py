@@ -317,10 +317,10 @@ import json, re
 from django.shortcuts import render, get_object_or_404
 from .models import Job
 
-def card_detail(request, unique_number):
+def card_detail(request, id):
     # 🔹 If unique_number is really unique, use get_object_or_404
     # but if not, fallback to first match
-    job = Job.objects.filter(unique_number=unique_number).first()
+    job = Job.objects.filter(pk=id).first()
     if not job:
         return render(request, "404.html", {"message": "Job not found."})
 
@@ -372,12 +372,12 @@ def all_job_applications(request):
 
 # Assuming your user model is linked to a Company model
 @login_required
-def job_applications(request,unique_number):
+def job_applications(request,id):
     try:
         print("job")
         company = Company.objects.get(official_email = request.user.email)
         print(company)
-        job = get_object_or_404(Job, unique_number=unique_number)
+        job = get_object_or_404(Job, pk=id)
         print(job)
         all_applications = JobApplication.objects.filter(job=job).order_by('-applied_at')
 
