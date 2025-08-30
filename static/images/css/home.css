@@ -98,7 +98,7 @@ body, html {
   }
   
   .stacking-card {
-    background: hsl(265.3, 10%, 75%);
+    background: white;
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;

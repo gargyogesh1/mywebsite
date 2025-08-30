@@ -1,8 +1,8 @@
 {% extends "common.html" %}
 {% block content %}
 
-    <section class="move-button">
-        <div class="container">
+    <section class="move-button" style="height: 100vh;">
+        <div class="container" style="height: 100%;">
             <div class="background">
               <span class="button2" style="top: 40%; left: 20%;">Artificial Intelligence</span>
               <span class="button2" style="top: 30%; left: 60%;">Flutter Developers</span>
@@ -42,8 +42,8 @@
     </section>
 
     <section class="stacking-card">
-        <div class="space space--small"></div>
-        <div class="cards">
+        {% comment %} <div class="space space--small"></div> {% endcomment %}
+        <div class="cards ">
           <div class="carded" data-index="0">
             <div class="card__inner">
               <div class="card__image-container">
