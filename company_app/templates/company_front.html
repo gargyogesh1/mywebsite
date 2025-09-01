@@ -64,6 +64,64 @@
             color: #007bff;
             cursor: pointer;
         }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            }
+
+            .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            }
+
+            .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            }
+
+            .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            }
+
+            input:checked + .slider {
+            background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+            }
+
+            .slider.round {
+            border-radius: 34px;
+            }
+
+            .slider.round:before {
+            border-radius: 50%;
+            }
     </style>
     <div class="container mt-5">
         
@@ -82,7 +140,13 @@
                         <p class="jobcard-title">{{job.job_title}} - {{job.job_location}}</p>
                         <p class="jobcard-subtitle">2coms <span>★ 3.8</span> | 446 Reviews</p>
                     </div>
-                    <img src="logo.png" alt="Company Logo">
+                     <div class="job_status">
+                        <label class="switch">
+                            <input type="checkbox" data-job-id="{{ job.id }}" {% if job.job_status == "active" %} checked {% endif %} >
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    {% comment %} <img src="logo.png" alt="Company Logo"> {% endcomment %}
                 </div>
                 <div class="jobcard-body">
                     <p><span class="icon">📅</span>{{ job.job_experience}} <span class="icon">💰</span>{{job.job_salary}} <span class="icon">📍</span>{{job.job_location}}</p>
@@ -112,6 +176,45 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', async () => {
+                const switches = document.querySelectorAll('.switch input[type="checkbox"]');
+
+                switches.forEach(toggleSwitch => {
+                    toggleSwitch.addEventListener('change', (event) => {
+                        const jobId = event.target.dataset.jobId;
+                        const btnStatus = event.target.checked;
+                        const newStatus = btnStatus? "active" : "inactive";
+
+                        fetch(`/company_app/update_job_status/${jobId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: JSON.stringify({ status: newStatus })
+                        })
+                        .then(response => response.json())
+                        .then(success => {
+                            console.log(success);
+                            if (!success) {
+                                // If the update fails, revert the switch state
+                                event.target.checked = !btnStatus;
+                                alert('Failed to update job status.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Revert the switch state on network error
+                            event.target.checked = !newStatus;
+                            alert('An error occurred.');
+                        });
+                    });
+                });
+            });
+    </script>
 {% comment %} </body>
 </html> {% endcomment %}
 {% endblock %}

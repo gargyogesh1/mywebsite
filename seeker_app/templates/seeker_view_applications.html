@@ -105,7 +105,7 @@
         <div class="job-listings">
         {% for job in jobs %}
         <div class="card-container">
-            <a href="{% url 'seeker_view_job_detailc' job.id %}">
+            <a href="{% url 'seeker_view_job_detail' job.id %}">
 
                 <div class="content">
                 <div class="header">{{job.job_title}}</div>

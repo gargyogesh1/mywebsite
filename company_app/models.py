@@ -93,6 +93,11 @@ class Job(models.Model):
     ('Volunteer', 'Volunteer'),
     ('Internship', 'Internship'),
     ]
+    job_status_choices = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('closed', 'Closed'),
+    ]
 
     jobpost_name = models.CharField(max_length=255)
     jobpost_phoneno = models.CharField(max_length=255)
@@ -107,6 +112,7 @@ class Job(models.Model):
     job_salary  = models.CharField(max_length=255)
     job_experience = models.CharField(max_length=25, blank=True)
     job_skills=models.CharField(max_length=255)
+    job_status=models.CharField(max_length=255,default="active", choices=job_status_choices)
     description = models.TextField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
     # unique_number = models.CharField(default="0",max_length=255,null=True)

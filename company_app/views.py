@@ -8,6 +8,26 @@ from .models import *
 from mywebsite.models import *
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+# from .models import Company_Register
+from django.contrib.auth.hashers import make_password  # For hashing the password
+
+from django.shortcuts import render, get_object_or_404
+from .models import Job
+from django.http import JsonResponse
+
+# def card_detail(request, unique_number):
+#     # Retrieve the specific card using the unique_id
+#     job = get_object_or_404(Job, unique_number=unique_number)
+#     print(job.description)
+#     # Render the template with the job details
+#     return render(request, 'job_detail.html', {'job': job})
+
+import json, re
+from django.shortcuts import render, get_object_or_404
+from .models import Job
+
 
 def company_job(request):
     print(request.user.email)
@@ -137,11 +157,6 @@ def company_profile(request):
         "company":company,
     }
     return render(request,"company_profile.html",context = context)
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-# from .models import Company_Register
-from django.contrib.auth.hashers import make_password  # For hashing the password
 
 
 def company_register(request):
@@ -303,19 +318,7 @@ def company_front(request):
     print(job)
     return render(request, 'company_front.html',{"job":job})
 
-from django.shortcuts import render, get_object_or_404
-from .models import Job
 
-# def card_detail(request, unique_number):
-#     # Retrieve the specific card using the unique_id
-#     job = get_object_or_404(Job, unique_number=unique_number)
-#     print(job.description)
-#     # Render the template with the job details
-#     return render(request, 'job_detail.html', {'job': job})
-
-import json, re
-from django.shortcuts import render, get_object_or_404
-from .models import Job
 
 def card_detail(request, id):
     # 🔹 If unique_number is really unique, use get_object_or_404
@@ -393,3 +396,20 @@ def job_applications(request,id):
         return render(request, 'company_app/not_a_company.html')
 
    
+@login_required
+def update_job_status(request, job_id):
+    try:
+        if request.method != 'POST':
+            return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
+        data = json.loads(request.body)
+        new_status = data.get('status')
+        print(new_status)
+        job = Job.objects.get(id=job_id)
+        job.job_status = new_status
+        job.save()
+        
+        return JsonResponse({'success': True})
+    except Job.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Job not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

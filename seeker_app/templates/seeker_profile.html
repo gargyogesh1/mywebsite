@@ -346,7 +346,7 @@
         <div class="card" id="update-profile">
           <h3>Update your profile instantly!</h3>
           <input type="file" class="upload-box" />
-          <button class="upload-btn">Upload Resume</button>
+          <button class="upload-btn" onclick="viewResume('{% url 'view_resume' %}')">View Resume</button>
         </div>
 
         <div class="card" id="profile-summary">
@@ -651,6 +651,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+ function viewResume(url) {
+    event.preventDefault();
 
+  window.location.href = url;
+  }
   </script>
 {% endblock %}

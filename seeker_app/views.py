@@ -20,6 +20,7 @@ from django.db.models import Q
 
 def seeker_jobs(request):
     jobs = Job.objects.all()
+    jobs = jobs.filter(job_status='active')
     seeker= None
     if request.user.is_authenticated:
         # Get a list of IDs for jobs the user has applied to
@@ -535,3 +536,27 @@ def remove_skill(request, skill_id):
         return JsonResponse({'success': False, 'error': 'Skill or seeker not found.'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+    
+    
+    
+
+def view_resume(request):
+    seeker = Seeker.objects.get(email_id = request.user.email)
+    
+    skills_list = []
+    if seeker.skills.exists():
+        skills_list = list(seeker.skills.all())
+        
+    context = {
+        'seeker': seeker,
+        
+        'skills_list':skills_list,
+        'educations': SeekerEducation.objects.filter(seeker=seeker),
+        'languages': SeekerLanguage.objects.filter(seeker=seeker),
+        'internships': SeekerInternship.objects.filter(seeker=seeker),
+        'projects': SeekerProject.objects.filter(seeker=seeker),
+        'exams': SeekerCompetitiveExam.objects.filter(seeker=seeker),
+        'employments': SeekerProfileEmployment.objects.filter(seeker=seeker),
+        'achievements': SeekerAcademicAchievement.objects.filter(seeker=seeker),
+    }
+    return render(request,"seeker_resume_template.html", context)
