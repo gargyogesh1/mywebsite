@@ -72,7 +72,8 @@ def company_job(request):
                             {"text": f"Location: {job_location}"},
                             {"text": "Length: Concise"},
                             {"text": "Time Period: {job_type}"},
-                            {"text": "Now, based on the above points, write a detailed 500-word job description covering responsibilities, qualifications, preferred skills, company culture, and benefits."}
+                            {"text": "Now, based on the above points, write a detailed 500-word job description covering responsibilities, qualifications, preferred skills, company culture, and benefits."},
+                            {"text": "provide content with keys: job_responsibilities ,job_qualifications  ,job_preferred_skills ,job_company_culture,job_benefits, more_details. "}
                         ]
                     }]
                 }
@@ -82,11 +83,29 @@ def company_job(request):
                 print(response.status_code)
                 print(response.text)
                 
+                
                 if response.status_code == 200:
                     response_data = response.json()
                     print(response_data)
                     try:
-                        description = response_data['candidates'][0]['content']['parts'][0]['text']
+                        
+                        raw_description = response_data['candidates'][0]['content']['parts'][0]['text']
+                        print("RAW DESCRIPTION:", raw_description[:200], "...")  # preview first 200 chars
+
+                        # Step 2: Remove ```json markers if present
+                        cleaned = re.sub(r"^```json\s*", "", raw_description)
+                        cleaned = re.sub(r"\s*```$", "", cleaned)
+
+                        # Step 3: Load the cleaned string as JSON
+                        description_json = json.loads(cleaned)
+
+                        # Step 4: Extract structured fields
+                        job_responsibilities = description_json.get("job_responsibilities", [])
+                        job_qualifications  = description_json.get("job_qualifications", [])
+                        job_preferred_skills = description_json.get("job_preferred_skills", [])
+                        job_company_culture  = description_json.get("job_company_culture", "")
+                        job_benefits         = description_json.get("job_benefits", [])
+                        more_details         = description_json.get("more_details", "")
                     except (KeyError, IndexError) as e:
                         description = 'No description available.'
                         messages.error(request, "Failed to extract job description from API response.")
@@ -111,7 +130,13 @@ def company_job(request):
                     job_salary=job_salary,
                     job_skills=job_skills,
                     company=company,
-                    description=description,
+                    job_responsibilities = job_responsibilities,
+                    job_qualifications  = job_qualifications,
+                    job_preferred_skills  = job_preferred_skills,
+                    job_company_culture = job_company_culture,
+                    job_benefits = job_benefits,
+                    more_details = more_details
+                    
                 )
                 job.save()
                 print("end object created")
@@ -318,32 +343,41 @@ def company_front(request):
     print(job)
     return render(request, 'company_front.html',{"job":job})
 
-
+def parse_field(field_text):
+    """
+    If field_text is a JSON list (starts with [), parse it.
+    Otherwise, wrap it in a single-element list.
+    """
+    if not field_text:
+        return []
+    field_text = field_text.strip()
+    try:
+        if field_text.startswith("["):
+            return json.loads(field_text)
+        else:
+            return [field_text]
+    except json.JSONDecodeError:
+        return [field_text]
 
 def card_detail(request, id):
-    # 🔹 If unique_number is really unique, use get_object_or_404
-    # but if not, fallback to first match
     job = Job.objects.filter(pk=id).first()
     if not job:
         return render(request, "404.html", {"message": "Job not found."})
 
     job_data = {}
-    if job.description:
-        raw_desc = job.description.strip()
-
-        # 🔹 remove markdown code block markers (```json ... ```)
-        if raw_desc.startswith("```"):
-            raw_desc = re.sub(r"^```[a-zA-Z]*\n", "", raw_desc, flags=re.MULTILINE)
-            raw_desc = re.sub(r"\n```$", "", raw_desc, flags=re.MULTILINE)
-
-        try:
-            job_data = json.loads(raw_desc)
-        except json.JSONDecodeError as e:
-            print("JSON ERROR:", e)
-            print("CLEANED DESCRIPTION:", raw_desc[:200], "...")
-            # fallback: just keep raw text
-            job_data = {"job_description": raw_desc}
-
+    job_data = {
+        "job_title": job.job_title,
+            "job_type": job.job_type,
+            "experience": job.job_experience,
+            "location": job.job_location,
+            "salary_range": job.job_salary,
+            "job_responsibilities": parse_field(job.job_responsibilities),
+            "job_qualifications": parse_field(job.job_qualifications),
+            "job_preferred_skills": parse_field(job.job_preferred_skills),
+            "job_company_culture": parse_field(job.job_company_culture),
+            "job_benefits": parse_field(job.job_benefits),
+            "more_details": parse_field(job.more_details),
+        }
     print("JOB DATA:", job_data)
 
     return render(request, "job_detail.html", {

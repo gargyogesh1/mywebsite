@@ -1,51 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ job_data.job_title }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ jobTitle }} Details</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Arial', sans-serif; background: #f4f6fc; color: #333; line-height: 1.6; padding: 20px; }
+    .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    h1 { font-size: 2rem; font-weight: bold; color: #2c3e50; margin-bottom: 25px; text-align: center; }
+    .section { margin-bottom: 20px; }
+    .section h2 { color: #1a73e8; margin-bottom: 10px; }
+    ul { margin-left: 20px; }
+    li { margin-bottom: 6px; color: #555; }
+    .skill { display: inline-block; background: #eef; border-radius: 5px; padding: 3px 8px; margin: 3px 5px 3px 0; font-size: 14px; }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body>
+  <div class="container">
+    <h1>{{ job_data.job_title }}</h1>
 
-  <div class="max-w-4xl mx-auto py-10 px-4">
-    <!-- Job Card -->
-    <div class="bg-white shadow-lg rounded-2xl p-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ job_data.job_title }}</h1>
-      
-      <!-- Job Details -->
-      <div class="grid md:grid-cols-2 gap-6 text-gray-700">
-        <p><span class="font-semibold">Type:</span> {{ job_data.job_type }}</p>
-        <p><span class="font-semibold">Experience:</span> {{ job_data.experience }}</p>
-        <p><span class="font-semibold">Location:</span> {{ job_data.location }}</p>
-        <p><span class="font-semibold">Salary:</span> ₹{{ job_data.salary_range }}</p>
-      </div>
+<p><strong>Job Type:</strong> {{ job_data.job_type }}</p>
+<p><strong>Experience:</strong> {{ job_data.experience }}</p>
+<p><strong>Location:</strong> {{ job_data.location }}</p>
+<p><strong>Salary:</strong> {{ job_data.salary_range }}</p>
 
-      <!-- Skills -->
-      <div class="mt-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-2">Skills</h2>
-        {% if job_data.skills %}
-          <div class="flex flex-wrap gap-2">
-            {% for skill in job_data.skills %}
-              <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full shadow-sm">
-                {{ skill }}
-              </span>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p class="text-gray-500">No skills provided</p>
-        {% endif %}
-      </div>
+<h2>Responsibilities</h2>
+<ul>
+  {% for r in job_data.job_responsibilities %}
+    <li>{{ r }}</li>
+  {% empty %}
+    <li>No responsibilities listed.</li>
+  {% endfor %}
+</ul>
 
-      <!-- Job Description -->
-      <div class="mt-8">
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">Job Description</h2>
-        <div class="prose max-w-none text-gray-700">
-          {{ job_data.job_description|linebreaks }}
-        </div>
-      </div>
-    </div>
+<h2>Qualifications</h2>
+<ul>
+  {% for q in job_data.job_qualifications %}
+    <li>{{ q }}</li>
+  {% empty %}
+    <li>No qualifications listed.</li>
+  {% endfor %}
+</ul>
+
+<h2>Preferred Skills</h2>
+<ul>
+  {% for s in job_data.job_preferred_skills %}
+    <li>{{ s }}</li>
+  {% empty %}
+    <li>No preferred skills listed.</li>
+  {% endfor %}
+</ul>
+
+<h2>Company Culture</h2>
+<p>{{ job_data.job_company_culture }}</p>
+
+<h2>Benefits</h2>
+<ul>
+  {% for b in job_data.job_benefits %}
+    <li>{{ b }}</li>
+  {% empty %}
+    <li>No benefits listed.</li>
+  {% endfor %}
+</ul>
+<h2>Company Culture</h2>
+<p>{{ job_data.job_company_culture }}</p>
+
+<h2>More Details</h2>
+<ul>
+  {% for b in job_data.more_details %}
+    <li>{{ b }}</li>
+  {% empty %}
+  {% endfor %}
+</ul>
+
   </div>
-
 </body>
 </html>
