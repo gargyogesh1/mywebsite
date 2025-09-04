@@ -343,21 +343,70 @@ def company_front(request):
     print(job)
     return render(request, 'company_front.html',{"job":job})
 
+import json
+
+# def parse_field(field_text):
+#     """
+#     Convert a stringified list to a Python list.
+#     If it's already a proper JSON list, parse it.
+#     Otherwise, wrap it in a single-element list.
+#     """
+#     if not field_text:
+#         return []
+    
+#     field_text = field_text.strip()
+    
+#     # If it looks like a list but uses single quotes, fix it
+#     if field_text.startswith("[") and field_text.endswith("]"):
+#         try:
+#             # replace single quotes with double quotes for JSON parsing
+#             fixed_text = field_text.replace("'", '"')
+#             return json.loads(fixed_text)
+#         except json.JSONDecodeError:
+#             # fallback: split by comma for safety
+#             items = [item.strip() for item in field_text[1:-1].split(",")]
+#             return items
+    
+#     # Otherwise, wrap as single-element list
+#     return [field_text]
+
+
+import json
+import re
+
 def parse_field(field_text):
     """
-    If field_text is a JSON list (starts with [), parse it.
-    Otherwise, wrap it in a single-element list.
+    Convert a string or list-like string into a Python list of items.
+    - If it's a JSON list (starts with [), parse it.
+    - If it's a Python-like list (single quotes), convert and parse.
+    - If it's a plain string, wrap in a single-element list.
     """
     if not field_text:
         return []
+
     field_text = field_text.strip()
-    try:
-        if field_text.startswith("["):
+
+    # Case 1: Proper JSON list
+    if field_text.startswith("[") and field_text.endswith("]"):
+        try:
             return json.loads(field_text)
-        else:
-            return [field_text]
-    except json.JSONDecodeError:
-        return [field_text]
+        except json.JSONDecodeError:
+            # Case 2: Python-like list with single quotes
+            try:
+                fixed_text = field_text.replace("'", '"')
+                return json.loads(fixed_text)
+            except json.JSONDecodeError:
+                # fallback: split by comma but keep items as paragraphs
+                items = [item.strip() for item in re.split(r",\s*(?=[A-Z])", field_text[1:-1])]
+                return items
+
+    # Case 3: Already a Python list object (rare, if passed directly)
+    if isinstance(field_text, list):
+        return field_text
+
+    # Case 4: Plain string (single paragraph or multiple sentences)
+    return [field_text]
+
 
 def card_detail(request, id):
     job = Job.objects.filter(pk=id).first()
