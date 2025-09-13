@@ -101,7 +101,7 @@
 .footer-section .footer-widget ul li {
   display: inline-block;
   float: left;
-  width: 50%;
+  width: 100%;
   margin-bottom: 12px;
 }
 .footer-section .footer-widget ul li a:hover{

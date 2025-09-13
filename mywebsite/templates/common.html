@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <body>
   <section class="main-navbar">
 
-    <div class="navbar">
+   <div class="navbar">
       <i class='bx bx-menu'></i>
       <div class="logo"><a href="http://127.0.0.1:8000/home/">Naukri</a></div>
       <div class="nav-links">
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <ul class="links">
           <li><a href="/home">HOME</a></li>
           <li><a href="/seeker_app/jobs">Jobs</a></li>
-          {% comment %} <li>
+          <li>
             <a href="#">HTML & CSS</a>
             <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i>
             <ul class="htmlCss-sub-menu sub-menu">
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <li><a href="#">Card Slider</a></li>
               <li><a href="#">Complete Website</a></li>
             </ul>
-          </li> {% endcomment %}
+          </li>
           <li><a href="#">ABOUT US</a></li>
           <li><a href="#">CONTACT US</a></li>
           {% if user.is_authenticated %}
@@ -177,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
 
     </div>
+  
 
   </section>
   <!-- Main Content -->

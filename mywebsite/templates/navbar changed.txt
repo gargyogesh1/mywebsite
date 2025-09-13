@@ -1,0 +1,78 @@
+<div class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+  
+    <!-- Left Side -->
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <i class='bx bx-menu'></i>
+      <div class="logo"><a href="http://127.0.0.1:8000/home/">Naukri</a></div>
+      <ul class="links" style="list-style: none; display: flex; gap: 15px; margin: 0; padding: 0;">
+        <li><a href="/home">HOME</a></li>
+        <li><a href="/seeker_app/jobs">Jobs</a></li>
+        <!--
+          <li>
+            <a href="#">HTML & CSS</a>
+            {% comment %} <i class='bx bxs-chevron-down htmlcss-arrow arrow  '></i> {% endcomment %}
+            <ul class="htmlCss-sub-menu sub-menu">
+              <li><a href="#">Web Design</a></li>
+              <li><a href="#">Login Forms</a></li>
+              <li><a href="#">Card Design</a></li>
+              <li class="more">
+                <span><a href="#">More</a>
+                  <i class='bx bxs-chevron-right arrow more-arrow'></i>
+                </span>
+                <ul class="more-sub-menu sub-menu">
+                  <li><a href="#">Neumorphism</a></li>
+                  <li><a href="#">Pre-loader</a></li>
+                  <li><a href="#">Glassmorphism</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#">JAVASCRIPT</a>
+            {% comment %} <i class='bx bxs-chevron-down js-arrow arrow '></i> {% endcomment %}
+            <ul class="js-sub-menu sub-menu">
+              <li><a href="#">Dynamic Clock</a></li>
+              <li><a href="#">Form Validation</a></li>
+              <li><a href="#">Card Slider</a></li>
+              <li><a href="#">Complete Website</a></li>
+            </ul>
+          </li>
+        -->
+        <li><a href="#"> SALARY GUIDE </a></li>
+        <li><a href="#">CREATE RESUME</a></li>
+      </ul>
+    </div>
+
+    <!-- Right Side (Login/Logout) -->
+    <div>
+      {% if user.is_authenticated %}
+      <ul class="links" style="list-style: none; display: flex; gap: 10px; margin: 0; padding: 0;">
+        <li>
+          <a href="{% url 'logout' %}">Logout</a>
+          <i class='bx bxs-chevron-down js-arrow arrow'></i>
+          <ul class="js-sub-menu sub-menu">
+            <li><a href="#">{{ request.user.email }}</a></li>
+            <li><a href="/seeker_app/seeker_profile">Profile</a></li>
+            <li><a href="/seeker_app/view_applications">View Applications</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% else %}
+      <ul class="links" style="list-style: none; display: flex; gap: 10px; margin: 0; padding: 0;">
+        <li>
+          <div>
+          <a href="#">Login/Register</a>
+          {% comment %} <i class='bx bxs-chevron-down js-arrow arrow'></i> {% endcomment %}
+          </div>
+          <ul class="js-sub-menu sub-menu">
+            <li><a href="/seeker_app/seeker_login">Seeker Login</a></li>
+            <li><a href="/seeker_app/seeker_register">Seeker Register</a></li>
+            <li><a href="/company_app/company_login">Company Login</a></li>
+            <li><a href="/company_app/company_register">Company Register</a></li>
+          </ul>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+
+  </div>
