@@ -3,7 +3,7 @@ from django.shortcuts import *
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login
 import requests
-
+from django.db.models import Count
 from .models import *
 from mywebsite.models import *
 from django.contrib.auth.decorators import login_required
@@ -345,9 +345,15 @@ def company_forgot_password(request):
 def company_front(request):
     print(request.user.email)
     user_email = request.user.email
-    job = Job.objects.filter(company__official_email=user_email)
+    job = Job.objects.filter(company__official_email=user_email).annotate(
+        # This creates a new field named 'accepted_count' on each Job object.
+        accepted_count=Count(
+            'applications', 
+            filter=models.Q(applications__status='accepted')
+        )
+    )
     print(job)
-    return render(request, 'company_front.html',{"job":job})
+    return render(request, 'company_front.html',{"job":job,})
 
 import json
 

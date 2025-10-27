@@ -5,3 +5,4 @@ db.sqlite3
 /seeker_app/__pycache__
 /company_app/__pycache__
 /company_app/__pycache__
+/company_app/migrations
