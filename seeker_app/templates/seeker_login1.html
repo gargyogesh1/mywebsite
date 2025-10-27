@@ -1,0 +1,395 @@
+{% extends "common.html" %}
+{% load static %}
+
+{% block content %}
+<main class="main-container">
+    <!-- LEFT SECTION -->
+    <section class="left-section">
+        <h2>New to Naukri?</h2>
+        <ul class="feature-list">
+            <li class="feature-item"><div class="checkmark"></div><span>One click apply using naukri profile.</span></li>
+            <li class="feature-item"><div class="checkmark"></div><span>Get relevant job recommendations.</span></li>
+            <li class="feature-item"><div class="checkmark"></div><span>Showcase profile to top companies and consultants.</span></li>
+            <li class="feature-item"><div class="checkmark"></div><span>Know application status on applied jobs.</span></li>
+        </ul>
+        <button class="register-free-btn" onclick="window.location.href='{% url 'seeker_register' %}'">
+            Register for Free
+        </button>
+        <div class="illustration">
+            <div class="illustration-img">
+                <div class="person-icon"></div>
+                <div class="screen-icon"><div class="check-icon"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RIGHT SECTION -->
+    <section class="right-section">
+        <h2>Login Job Seeker</h2>
+
+        {% if messages %}
+            <div class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'seeker_login' %}" onsubmit="handleLogin(event)">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Email ID / Username</label>
+                <input type="email" name="email" id="email" placeholder="Enter Email ID / Username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" name="password" id="password" placeholder="Enter Password" required>
+                    <span class="show-password" onclick="togglePassword()">Show</span>
+                </div>
+            </div>
+
+            <div class="forgot-password">
+                <a href="{% url 'seeker_forgot_password' %}">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login-btn-main login-button">Login</button>
+
+            {% comment %} <div class="otp-login">
+                <a href="{% url 'otp_login' %}">Use OTP to Login</a>
+            </div> {% endcomment %}
+
+            <div class="divider"><span>Or</span></div>
+
+            <button type="button" class="google-signin" onclick="window.location.href='{% url 'google_login' %}'">
+                <div class="google-icon"></div>
+                <span>Sign in with Google</span>
+            </button>
+        </form>
+    </section>
+</main>
+
+<style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            gap: 0;
+            min-height: 70vh;
+            align-items: center;
+        }
+
+        /* Left Section */
+        .left-section {
+            height:43vw;
+            flex: 1;
+            background: white;
+            padding: 60px 50px;
+            border-radius: 20px 0 0 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        /* Exact dividing line */
+        .left-section::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent 0%, #e6e8eb 15%, #e6e8eb 85%, transparent 100%);
+        }
+
+        .left-section h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 24px;
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background-color: #e8f4fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkmark::after {
+            content: '✓';
+            color: #4a90e2;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .register-free-btn {
+            background: none;
+            border: 2px solid #4a90e2;
+            color: #4a90e2;
+            padding: 12px 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .register-free-btn:hover {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .illustration {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .illustration-img {
+            width: 200px;
+            height: 120px;
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1e7dd 100%);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .person-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #4a90e2;
+            border-radius: 50%;
+            position: absolute;
+            left: 20px;
+            bottom: 15px;
+        }
+
+        .screen-icon {
+            width: 80px;
+            height: 50px;
+            background-color: white;
+            border-radius: 8px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            border: 2px solid #ddd;
+        }
+
+        .check-icon {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            width: 20px;
+            height: 20px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .check-icon::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Right Section */
+        .right-section {
+            height:48vw;
+            flex: 1;
+            background: white;
+            padding: 60px 50px;
+            border-radius: 0 20px 20px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+
+        .right-section h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #4a90e2;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a90e2;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login-btn-main {
+            width: 100%;
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .otp-login {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-login a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            color: #999;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background-color: #eee;
+        }
+
+        .divider span {
+            background-color: white;
+            padding: 0 15px;
+        }
+
+        .google-signin {
+            width: 100%;
+            border: 1px solid #ddd;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(45deg, #4285f4, #ea4335, #fbbc05, #34a853);
+            border-radius: 50%;
+        }
+</style>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleText = document.querySelector('.show-password');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleText.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            toggleText.textContent = 'Show';
+        }
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        const loginButton = document.querySelector('.login-button');
+        loginButton.textContent = 'Please wait...';
+        loginButton.disabled = true;
+        loginButton.classList.add('disabled');
+
+        setTimeout(() => {
+            document.querySelector('form').submit();
+        }, 500);
+    }
+</script>
+{% endblock %}

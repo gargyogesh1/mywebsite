@@ -158,6 +158,45 @@
           </nav>
     </section>
 
+    <div class="login-card-container">
+    <div class="login-card">
+        <div class="login-card-face login-card-face1">
+            <div class="login-card-content">
+                <div class="login-card-icon">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+        <div class="login-card-face login-card-face2">
+            <div class="login-card-content">
+                <p>Login here for finding job.</p>
+                <button class="login-card-btn" onclick="window.location.href='/seeker_app/seeker_login'", '_blank')">
+                    Job Seeker Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-card">
+        <div class="login-card-face login-card-face1">
+            <div class="login-card-content">
+                <div class="login-card-icon">
+                    <i class="fa fa-briefcase" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+        <div class="login-card-face login-card-face2">
+            <div class="login-card-content">
+                <p>Login here for company Login</p>
+                <button class="login-card-btn" onclick="window.location.href='/company_app/company_login'", '_blank')">
+                    Company Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
   {% include 'footer.html' %}
 
 {% endblock %}

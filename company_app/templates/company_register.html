@@ -1,117 +1,172 @@
 {% extends "company_common.html" %}
 
-    {% block title%}
-    Company Registration
-    {% endblock %}
-    {% block headCss%}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            padding: 20px;
-        }
-        .form-container {
-            max-width: 500px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .form-container h1 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-align: center;
-        }
-        .form-container label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        .form-container input, 
-        .form-container select,
-        .form-container textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-        .success {
-            color: green;
-            font-size: 1em;
-        }
-    </style>
-    {% endblock %}
-    {% block content %}
+{% block title %}
+Company Registration
+{% endblock %}
 
-    <div class="form-container">
-        <h1>Register Your Company</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <p class="{{ message.tags }}">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        <form method="POST">
-            {% csrf_token %}
-            <label for="name">Company Name*</label>
-            <input type="text" id="name" name="company_name" placeholder="Enter company name" required>
+{% block headCss %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        padding: 20px;
+    }
+    .form-container {
+        max-width: 500px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+    }
+    .form-container label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .form-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .form-container button:hover {
+        background-color: #0056b3;
+    }
+    .error {
+        color: red;
+        font-size: 0.9em;
+    }
+    .success {
+        color: green;
+        font-size: 1em;
+    }
+    .password-rules {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    .password-rules p {
+        margin: 3px 0;
+        color: red;
+        transition: color 0.3s ease;
+    }
+    .password-rules p.valid {
+        color: green;
+    }
+</style>
+{% endblock %}
 
-            <label for="phone_number">Company Phone Number*</label>
-            <input type="text" id="phone_number" name="company_phone" placeholder="Enter phone number" required>
+{% block content %}
+<div class="form-container">
+    <h1>Register Your Company</h1>
 
-            <label for="official_email">Official Email*</label>
-            {% comment %} TODO : later input to email,url {% endcomment %}
-            <input type="text" id="official_email" name="office_email" placeholder="Enter official email" required>
+    {% if messages %}
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 
-            <label for="website">Website</label>
-            <input type="text" id="website" name="company_url" placeholder="Enter website URL">
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Company Name*</label>
+        <input type="text" id="name" name="company_name" placeholder="Enter company name" required>
 
-            <label for="address">Company Address*</label>
-            <textarea id="address" name="company_address" placeholder="Enter company address" required></textarea>
+        <label for="phone_number">Company Phone Number*</label>
+        <input type="text" id="phone_number" name="company_phone" placeholder="Enter phone number" required>
 
-            <label for="password">Password *</label>
-            <input type="password" name="password" id="password" required>
+        <label for="official_email">Official Email*</label>
+        <input type="text" id="official_email" name="office_email" placeholder="Enter official email" required>
 
-            <label for="industry">Select Industry*</label>
-            <select id="industry" name="company_work" required>
-                <option value="">--Select Industry--</option>
-                <option value="IT">Information Technology</option>
-                <option value="Finance">Finance</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Education">Education</option>
-                <option value="Retail">Retail</option>
-            </select>
+        <label for="website">Website</label>
+        <input type="text" id="website" name="company_url" placeholder="Enter website URL">
 
-            <label for="number_of_employees">Number of Employees*</label>
-            <select id="number_of_employees" name="num_employees" required>
-                <option value="">--Select Number of Employees--</option>
-                <option value="1-10">1-10 Employees</option>
-                <option value="11-50">11-50 Employees</option>
-                <option value="51-200">51-200 Employees</option>
-                <option value="201-500">201-500 Employees</option>
-                <option value="501+">501+ Employees</option>
-            </select>
+        <label for="address">Company Address*</label>
+        <textarea id="address" name="company_address" placeholder="Enter company address" required></textarea>
 
-            <button type="submit">Register</button>
-        </form>
-    </div>
-    {% endblock%}
+        <label for="password">Password*</label>
+        <input type="password" name="password" id="password" required>
+
+        <div class="password-rules">
+            <p id="lower">One small alphabet (a-z)</p>
+            <p id="upper">One capital alphabet (A-Z)</p>
+            <p id="number">One number (0-9)</p>
+            <p id="special">One special character (!@#$%^&*_-?.)</p>
+            <p id="length">8-40 characters</p>
+        </div>
+
+        <label for="industry">Select Industry*</label>
+        <select id="industry" name="company_work" required>
+            <option value="">--Select Industry--</option>
+            <option value="IT">Information Technology</option>
+            <option value="Finance">Finance</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="Retail">Retail</option>
+        </select>
+
+        <label for="number_of_employees">Number of Employees*</label>
+        <select id="number_of_employees" name="num_employees" required>
+            <option value="">--Select Number of Employees--</option>
+            <option value="1-10">1-10 Employees</option>
+            <option value="11-50">11-50 Employees</option>
+            <option value="51-200">51-200 Employees</option>
+            <option value="201-500">201-500 Employees</option>
+            <option value="501+">501+ Employees</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<script>
+    const passwordInput = document.getElementById("password");
+    const lower = document.getElementById("lower");
+    const upper = document.getElementById("upper");
+    const number = document.getElementById("number");
+    const special = document.getElementById("special");
+    const length = document.getElementById("length");
+
+    passwordInput.addEventListener("input", function () {
+        const value = passwordInput.value;
+
+        // Small letter
+        if (/[a-z]/.test(value)) lower.classList.add("valid");
+        else lower.classList.remove("valid");
+
+        // Capital letter
+        if (/[A-Z]/.test(value)) upper.classList.add("valid");
+        else upper.classList.remove("valid");
+
+        // Number
+        if (/[0-9]/.test(value)) number.classList.add("valid");
+        else number.classList.remove("valid");
+
+        // Special character
+        if (/[!@#$%^&*_\-?.]/.test(value)) special.classList.add("valid");
+        else special.classList.remove("valid");
+
+        // Length
+        if (value.length >= 8 && value.length <= 40) length.classList.add("valid");
+        else length.classList.remove("valid");
+    });
+</script>
+{% endblock %}

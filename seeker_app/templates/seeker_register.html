@@ -1,112 +1,118 @@
 {% extends "common.html" %}
-{% block content %}
 
-<section class="job-seeker-register">
-    <div class="form-container">
-        <h1>Create your Naukri profile</h1>
-        <form method="POST">
-            {% csrf_token %}
-
-            <!-- Step 1 -->
-            <div id="menu-step1">
-                <!-- Email Field -->
-                <label for="email">Email ID*</label>
-                <input type="email" id="email" name="email" placeholder="Tell us your Email ID" value="{{ email_id }}">
-                {% if errors and 'Email is already registered.' in errors %}
-                    <p class="error">This email is already registered.</p>
-                {% endif %}
-
-                <!-- Mobile Field -->
-                <label for="mobile">Mobile number*</label>
-                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" value="{{ mobile_number }}">
-                {% if errors and 'All fields marked with * are required.' in errors %}
-                    <p class="error">This field is required.</p>
-                {% endif %}
-
-                <button type="button" id="nextBtn">Next</button>
-            </div>
-
-            <!-- Step 2 -->
-            <div id="menu-step2" style="display: none;">
-                <!-- Full Name Field -->
-                <label for="name">Full name*</label>
-                <input type="text" id="name" name="name" placeholder="What is your name?" value="{{ full_name }}">
-                {% if errors and 'All fields marked with * are required.' in errors %}
-                    <p class="error">This field is required.</p>
-                {% endif %}
-
-                <!-- Password Field -->
-                <label for="password">Password*</label>
-                <input type="password" id="password" name="password" placeholder="Minimum 6 characters">
-
-                <!-- Confirm Password Field -->
-                <label for="confirm_password">Confirm Password*</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Same as Password">
-
-                <!-- Work Status Field -->
-                <label>Work status*</label>
-                <div class="work-status">
-                    <label><input type="radio" name="work_status" value="experienced" {% if work_status == 'experienced' %}checked{% endif %}> I’m experienced</label>
-                    <label><input type="radio" name="work_status" value="fresher" {% if work_status == 'fresher' %}checked{% endif %}> I’m a fresher</label>
-                </div>
-                {% if errors and 'All fields marked with * are required.' in errors %}
-                    <p class="error">Please select a work status.</p>
-                {% endif %}
-
-                <!-- Promotions Checkbox -->
-                <div class="checkbox-container">
-                    <input type="checkbox" id="promotions" name="promotions" {% if promotions %}checked{% endif %}>
-                    <label for="promotions">Send me important updates & promotions via SMS, email, and WhatsApp</label>
-                </div>
-
-                <p class="terms">
-                    By clicking Register, you agree to the <a href="#">Terms and Conditions</a> & <a href="#">Privacy Policy</a>.
-                </p>
-
-                <button type="submit">Register now</button>
-            </div>
-        </form>
-
-        <div class="google-btn">
-            <button>
-                <span>Continue with</span> Google
-            </button>
-        </div>
-
-        <div class="footer-links">
-            <p><a href="#">About Us</a> | <a href="#">Contact Us</a> | <a href="#">FAQs</a> | <a href="#">Terms and Conditions</a></p>
-        </div>
-    </div>
-</section>
-
-{% endblock %}
-
+{% block headCss %}
 <style>
-    .error {
-        color: red;
-        font-size: 14px;
-        margin-top: -10px;
+    body {
+        background-color: #f9f9f9;
     }
-    .form-container input, .form-container label, .form-container button {
-        width: 100%;
-        margin-bottom: 10px;
+    .register-container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .register-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .password-rules p {
+        margin: 4px 0;
+        color: red;
+        font-size: 0.9em;
+        transition: color 0.3s ease;
+    }
+    .password-rules p.valid {
+        color: green;
     }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h2>Job Seeker Registration</h2>
+
+    {% if errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Full Name*</label>
+            <input type="text" class="form-control" name="name" value="{{ full_name|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email ID*</label>
+            <input type="email" class="form-control" name="email" value="{{ email_id|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mobile Number*</label>
+            <input type="text" class="form-control" name="mobile" value="{{ mobile_number|default:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Work Status*</label>
+            <select class="form-select" name="work_status" required>
+                <option value="">Select Work Status</option>
+                <option value="Employed" {% if work_status == "Employed" %}selected{% endif %}>Employed</option>
+                <option value="Unemployed" {% if work_status == "Unemployed" %}selected{% endif %}>Unemployed</option>
+                <option value="Student" {% if work_status == "Student" %}selected{% endif %}>Student</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password*</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <div class="password-rules">
+            <p id="lower">One small alphabet (a–z)</p>
+            <p id="upper">One capital alphabet (A–Z)</p>
+            <p id="number">One number (0–9)</p>
+            <p id="special">One special character (!@#$%^&*_-?.)</p>
+            <p id="length">8–40 characters</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confirm Password*</label>
+            <input type="password" class="form-control" name="confirm_password" required>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" name="promotions" id="promotions" {% if promotions %}checked{% endif %}>
+            <label class="form-check-label" for="promotions">Receive promotional emails</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("nextBtn").addEventListener("click", function () {
-        console.log("Yogesh Garg");
-        let email = document.getElementById("email").value.trim();
-        let mobile = document.getElementById("mobile").value.trim();
+    const passwordInput = document.getElementById("password");
+    const lower = document.getElementById("lower");
+    const upper = document.getElementById("upper");
+    const number = document.getElementById("number");
+    const special = document.getElementById("special");
+    const length = document.getElementById("length");
 
-        if (email === "" || mobile === "") {
-            alert("Please fill Email and Mobile to continue.");
-            return;
-        }
+    passwordInput.addEventListener("input", function () {
+        const val = passwordInput.value;
 
-        document.getElementById("menu-step1").style.display = "none";
-        document.getElementById("menu-step2").style.display = "block";
+        /[a-z]/.test(val) ? lower.classList.add("valid") : lower.classList.remove("valid");
+        /[A-Z]/.test(val) ? upper.classList.add("valid") : upper.classList.remove("valid");
+        /[0-9]/.test(val) ? number.classList.add("valid") : number.classList.remove("valid");
+        /[!@#$%^&*_\-?.]/.test(val) ? special.classList.add("valid") : special.classList.remove("valid");
+        (val.length >= 8 && val.length <= 40) ? length.classList.add("valid") : length.classList.remove("valid");
     });
-});
 </script>
+{% endblock %}

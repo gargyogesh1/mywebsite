@@ -213,7 +213,94 @@ def seeker_login(request):
             messages.error(request, "Invalid email or password.")
             return redirect('seeker_login')  # Stay on the login page
 
-    return render(request, 'seeker_login.html')
+    return render(request, 'seeker_login1.html')
+
+
+def seeker_register(request):
+    if request.method == "POST":
+        full_name = request.POST.get("name")
+        email_id = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+        mobile_number = request.POST.get("mobile")
+        work_status = request.POST.get("work_status")
+        promotions = request.POST.get("promotions", "off") == "on"
+
+        errors = []
+
+        # Required fields
+        if not all([full_name, email_id, password, confirm_password, mobile_number, work_status]):
+            errors.append("All fields marked with * are required.")
+
+        # Password match
+        if password != confirm_password:
+            errors.append("Password and Confirm Password do not match.")
+
+        # Email already exists
+        if Seeker.objects.filter(email_id=email_id).exists():
+            errors.append("Email is already registered.")
+
+        # ✅ Password strength validation
+        if len(password) < 8 or len(password) > 40:
+            errors.append("Password must be 8–40 characters long.")
+        if not re.search(r"[a-z]", password):
+            errors.append("Password must include at least one lowercase letter.")
+        if not re.search(r"[A-Z]", password):
+            errors.append("Password must include at least one uppercase letter.")
+        if not re.search(r"[0-9]", password):
+            errors.append("Password must include at least one number.")
+        if not re.search(r"[!@#$%^&*_\-?.]", password):
+            errors.append("Password must include at least one special character (!@#$%^&*_-?.).")
+
+        # If any rule fails → stop registration
+        if errors:
+            return render(request, "seeker_register.html", {
+                "errors": errors,
+                "full_name": full_name,
+                "email_id": email_id,
+                "mobile_number": mobile_number,
+                "work_status": work_status,
+                "promotions": promotions,
+            })
+
+        # ✅ Create Seeker
+        seeker = Seeker.objects.create(
+            full_name=full_name,
+            email_id=email_id,
+            mobile_number=mobile_number,
+            work_status=work_status,
+            promotions=promotions,
+        )
+        SeekerLanguage.objects.create(seeker=seeker)
+        SeekerEducation.objects.create(seeker=seeker)
+        SeekerInternship.objects.create(seeker=seeker)
+        SeekerProject.objects.create(seeker=seeker)
+        SeekerCompetitiveExam.objects.create(seeker=seeker)
+        SeekerProfileEmployment.objects.create(seeker=seeker)
+        SeekerAcademicAchievement.objects.create(seeker=seeker)
+
+        # ✅ Create Django User
+        user = User.objects.create_user(
+            username=email_id + "+seeker",
+            email=email_id,
+            password=password
+        )
+        user.first_name = full_name
+        user.save()
+
+        # ✅ Add to Employee group
+        employee_group, _ = Group.objects.get_or_create(name="Employee")
+        user.groups.add(employee_group)
+
+        # Auto-login
+        user = authenticate(request, username=email_id + "+seeker", password=password)
+        if user:
+            login(request, user)
+
+        return redirect("seeker_jobs")
+
+    return render(request, "seeker_register.html")
+
 
 def seeker_forgot_password(request):
     context= {"step": "1"}

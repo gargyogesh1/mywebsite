@@ -124,4 +124,4 @@ console.log("motion nav bar");
     nav.removeEventListener("mousemove", onDrag);
   });
 
-//   end of motion nav bar
+

@@ -184,8 +184,8 @@ def company_profile(request):
     return render(request,"company_profile.html",context = context)
 
 
+
 def company_register(request):
-    
     if request.method == "POST":
         name = request.POST.get('company_name')
         phone_number = request.POST.get('company_phone')
@@ -195,64 +195,70 @@ def company_register(request):
         industry = request.POST.get('company_work')
         number_of_employees = request.POST.get('num_employees')
         password = request.POST.get('password')
-        print(name , phone_number , official_email , website , address , industry , number_of_employees , password)
-        
+
         errors = []
-        if not name or not phone_number or not official_email or not website or not address or not industry or not number_of_employees or not password:
-            errors.append("All Fields marked with * are required. ")
-        # TODO : Later validation
-        # if not phone_number.isdigit():
-        #     errors.append("Phone number must contain only digits.")
-        # if len(phone_number)<10:
-        #     errors.append("Phone number must be at least 10 digits.")
-        # if Company.objects.filter(official_email=official_email).exists():
-        #     errors.append("Email is already registered.")
-        # if "@gmail.com" in official_email:
-        #     errors.append("Gmail addresses are not allowed for the company email.")
-        # if len(password) < 8:
-        #     errors.append("Password must be at least 8 characters long.")  
+
+        # Check required fields
+        if not all([name, phone_number, official_email, address, industry, number_of_employees, password]):
+            errors.append("All fields marked with * are required.")
+
+        # Phone validation
+        if not phone_number.isdigit():
+            errors.append("Phone number must contain only digits.")
+        elif len(phone_number) < 10:
+            errors.append("Phone number must be at least 10 digits.")
+
+        # Email validation
         if Company.objects.filter(official_email=official_email).exists():
             errors.append("Email is already registered.")
+        if "@gmail.com" in official_email:
+            errors.append("Gmail addresses are not allowed for company email.")
+
+        # Password rules validation
+        if len(password) < 8 or len(password) > 40:
+            errors.append("Password must be 8–40 characters long.")
+        if not re.search(r"[a-z]", password):
+            errors.append("Password must include at least one lowercase letter.")
+        if not re.search(r"[A-Z]", password):
+            errors.append("Password must include at least one uppercase letter.")
+        if not re.search(r"[0-9]", password):
+            errors.append("Password must include at least one number.")
+        if not re.search(r"[!@#$%^&*_\-?.]", password):
+            errors.append("Password must include at least one special character (!@#$%^&*_-?.).")
+
+        # If errors, show messages and stop
         if errors:
             for error in errors:
                 messages.error(request, error)
-        else:
-            hashed_password = make_password(password)
- 
-            company = Company.objects.create(
-                name = name,
-                phone_number=phone_number,
-                official_email=official_email,
-                website=website,
-                address=address,
-                industry=industry,
-                number_of_employees=number_of_employees,
-                password=hashed_password,
-            )
-            if not User.objects.filter(email=official_email+"+company").exists():
-                # Add the user to the User table
-                user = User.objects.create_user(
-                    username= official_email+"+company",  # Use email as the username
-                    email=official_email,
-                    password=password,
-                )
-                print("User created:", user.username)
-                
-                try:
-                    company_group = Group.objects.get(name="Company")  # Fetch the "Company" group
-                    user.groups.add(company_group)  # Add the user to the group
-                    
-                except Group.DoesNotExist:
-                    Group.objects.create(name="Company")  # Create the group if it doesn't exist
-                    print("The 'Company' group does not exist. Please create it in the Admin panel.")
-                    company_group = Group.objects.get(name="Company")  # Fetch the "Company" group
-                    user.groups.add(company_group)  # Add the user to the group
-                user.save()  # Save the user instance
+            return redirect('company_register')
 
-            messages.success(request, "User added to the system.")
-            messages.success(request,"Company registration Sucessfully!")
+        # If everything is valid, create Company and User
+        hashed_password = make_password(password)
+        company = Company.objects.create(
+            name=name,
+            phone_number=phone_number,
+            official_email=official_email,
+            website=website,
+            address=address,
+            industry=industry,
+            number_of_employees=number_of_employees,
+            password=hashed_password,
+        )
+
+        if not User.objects.filter(email=official_email + "+company").exists():
+            user = User.objects.create_user(
+                username=official_email + "+company",
+                email=official_email,
+                password=password,
+            )
+            company_group, created = Group.objects.get_or_create(name="Company")
+            user.groups.add(company_group)
+            user.save()
+
+        messages.success(request, "Company registration successful!")
         return redirect('company_register')
-    return render(request,'company_register.html')
+
+    return render(request, 'company_register.html')
 
 def company_login(request):
     if request.method == "POST":
@@ -274,7 +280,7 @@ def company_login(request):
             messages.error(request,"Invalid email id or password")
             return redirect('company_login')
         
-    return render(request,'company_login.html')
+    return render(request,'company_login1.html')
 
 
 def company_forgot_password(request):
