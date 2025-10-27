@@ -15,7 +15,6 @@
 
     <style>
         .jobcard {
-            width: 600px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             padding: 16px;
@@ -69,6 +68,7 @@
             display: inline-block;
             width: 60px;
             height: 34px;
+            scale: .7;
             }
 
             .switch input {
@@ -122,55 +122,312 @@
             .slider.round:before {
             border-radius: 50%;
             }
+            /* Basic Reset and Container */
+            .tab-navigation {
+            font-family: Arial, sans-serif;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd; /* The line below the tabs */
+            }
+
+            .tab-navigation ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Aligns tabs horizontally */
+            }
+
+            /* Individual Tab Item */
+            .tab-item {
+            position: relative;
+            margin-right: 30px; /* Spacing between tabs */
+            padding-bottom: 5px; /* Space for the active indicator */
+            }
+
+            /* Tab Link (Text) */
+            .tab-link {
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333; /* Default text color */
+            padding: 10px 0;
+            display: block;
+            }
+
+            .tab-item:hover .tab-link {
+            color: #000;
+            }
+
+            /* Active Tab Styling */
+            .tab-item.active .tab-link {
+            color: #000;
+            font-weight: 700; /* Bolder for the active tab */
+            }
+
+            /* Active Tab Indicator (Red line below active tab) */
+            .active-indicator {
+            position: absolute;
+            bottom: -6px; /* Position it on top of the border line */
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #d93025; /* Red color for the indicator */
+            }
+
+            /* Optional: Count number styling (e.g., '3' in 'All Jobs 3') */
+            .count {
+            margin-left: 3px;
+            }
+            .count-number{
+                font-size: 20px;
+                font-weight: 600;
+                color:#007bff;
+            }
+
+            /* Notification Dot Styling (Next to 'Drafts 2') */
+            .notification-dot {
+            position: absolute;
+            top: 5px; /* Adjust vertical position */
+            right: -10px; /* Adjust horizontal position */
+            width: 6px;
+            height: 6px;
+            background-color: #d93025; /* Red color */
+            border-radius: 50%;
+            }
+            .job_post_date{
+                text-decoration: none;
+                font-size: 12px;
+            }
+            .jobs-applications-link{
+              text-decoration: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: #333; /* Default text color */
+                padding: 10px 0;
+                display: block;
+            }
+            .job-grid{
+                display: grid;
+                grid-template-columns: 3fr 2fr 2fr 1fr;
+                gap: 20px;
+            }
+                        /* General Panel Styling */
+            .filter-panel {
+                width: 300px; /* Example fixed width for the sidebar */
+                padding: 15px;
+                font-family: Arial, sans-serif;
+                background-color: #fff;
+                border: 1px solid #eee;
+                border-radius: 4px;
+            }
+
+            /* --- Search Box Styling --- */
+
+            .search-box {
+                position: relative;
+                margin-bottom: 20px;
+            }
+
+            .search-box input {
+                width: 100%;
+                padding: 10px 35px 10px 10px; /* Space for the icon on the right */
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+                font-size: 14px;
+            }
+
+            .search-box input::placeholder {
+                color: #888;
+            }
+
+            .search-icon {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                color: #888;
+                cursor: pointer;
+            }
+
+            /* --- Filter Group Styling (Job Status) --- */
+
+            .filter-group {
+                border-top: 1px solid #eee;
+                padding: 15px;
+            }
+
+            .filter-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .filter-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin: 0;
+            }
+
+            .toggle-icon {
+                font-size: 14px;
+                font-weight: bold;
+                color: #888;
+                transform: rotate(0deg); /* Start with 0deg for up-arrow */
+                transition: transform 0.2s;
+            }
+
+            /* Style for the visual cue (the up arrow in your image is subtle) */
+            .toggle-icon {
+                /* To represent the up arrow visually */
+                border: solid #888;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 3px;
+                transform: rotate(225deg); /* Rotates the caret to look like an up arrow */
+                margin-bottom: 4px; /* Adjust vertical alignment */
+            }
+
+
+            /* --- Filter Content (Checkboxes) --- */
+
+            .filter-content {
+                padding-top: 5px;
+            }
+
+            .filter-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                font-size: 14px;
+                color: #555;
+                cursor: pointer;
+            }
+            .filter-head{
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+
+            /* Style the count number */
+            .filter-item .count {
+                font-weight: 500;
+                color: #888;
+            }
+
+            /* Custom styling for the checkbox itself (optional, uses default browser checkboxes here) */
+            .filter-item input[type="checkbox"] {
+                margin-right: 8px;
+                /* Adjust size if needed, e.g., width: 16px; height: 16px; */
+            }
     </style>
-    <div class="container mt-5">
+    <div class="jobs-container container mt-5">
         
-        <h1>Job Listings</h1>
-        
-        
-        <!-- Button to add a new job -->
-        <a href="/company_app/company_job" class="btn btn-success mb-3">Add New Job</a>
-        <a href="/company_app/all_job_applications" class="btn btn-success mb-3">View All Applications</a>
+        <div class="d-flex pt-5 justify-content-between">
+            <h1>Manage Jobs and Responses</h1>
+              
+            <!-- Button to add a new job -->
+            <a href="/company_app/company_job" class="btn btn-primary mb-3 text-white">Post Job </a>
+            {% comment %} <a href="/company_app/all_job_applications" class="btn btn-success mb-3">View All Applications</a> {% endcomment %}
+        </div>
+<div class="job-home row" >
+        <div  class="filters-listings col-4 p-4"> 
+                <a href="#" class="tab-link pt-3 ps-3">Filters</a>
+                <hr>
+                <div class="search-box">
+                    <input type="text" placeholder="Search by Title/Ref Code/Job ID">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-header">
+                        <h3 class="filter-title">Job status</h3>
+                        <span class="toggle-icon"></span> 
+                    </div>
+                    
+                    <div class="filter-content">
+                        <label class="filter-item">
+                            <div class="filter-head">
+                                <input type="checkbox">
+                                <span>Active Jobs</span>
+                            </div>
+                                <span class="count">1</span>
+                        </label>
+
+                        <label class="filter-item">
+                                                        <div class="filter-head">
+
+                            <input type="checkbox">
+                            <span>Closed Jobs</span>
+                            </div>
+                            <span class="count">2</span>
+                        </label>
+
+                        <label class="filter-item">
+                                                        <div class="filter-head">
+
+                            <input type="checkbox">
+                            <span>Expired Jobs</span>
+                            </div>
+                            <span class="count">0</span>
+                        </label>
+                    </div>
+                </div>
+
+        </div>
+       <div class="job-listings col-8 p-4">
+
+        <nav class="tab-navigation">
+        <ul>
+            <li class="tab-item active">
+            <a href="#" class="tab-link">All Jobs <span class="count">3</span></a>
+            <div class="active-indicator"></div>
+            </li>
+            
+            <li class="tab-item">
+            <a href="#" class="tab-link">Drafts <span class="count">2</span></a>
+            <span class="notification-dot"></span>
+            </li>
+        </ul>
+        </nav>
+
         {% for job in job %}
-        <a href="{% url 'card_detail' job.id %}">
+        <a href="{% url 'card_detail' job.id %}" style="text-decoration: none; color: inherit;">
             <div class="jobcard">
 
-                <div class="jobcard-header">
-                    <div>
-                        <p class="jobcard-title">{{job.job_title}} - {{job.job_location}}</p>
-                        <p class="jobcard-subtitle">2coms <span>★ 3.8</span> | 446 Reviews</p>
+                <div class="job-grid row flex-equal-cols">
+                    <div class="col-item">
+                        <p class="jobcard-title">{{job.job_title}}</p>
+                        <p class="jobcard-subtitle">{{job.job_location}}</p>
+                    </div>       
+                    <div class="col-item">
+                        <span class="count-number">{{ job.applications.count}}</span>
+                        <a href="{% url 'job_applications' job.id %}" class="jobs-applications-link"><p class="jobcard-subtitle">Total Responses</p></a>
                     </div>
-                     <div class="job_status">
+                    <div class="col-item">
+                        <span class="count-number">{{ job.accepted_count}}</span>
+                        <a href="{% url 'job_applications' job.id %}" class="jobs-applications-link"><p class="jobcard-subtitle">Shortlisted</p></a>
+                    </div>
+                     <div class="job_status col-item">
                         <label class="switch">
                             <input type="checkbox" data-job-id="{{ job.id }}" {% if job.job_status == "active" %} checked {% endif %} >
                             <span class="slider round"></span>
                         </label>
                     </div>
-                    {% comment %} <img src="logo.png" alt="Company Logo"> {% endcomment %}
                 </div>
-                <div class="jobcard-body">
-                    <p><span class="icon">📅</span>{{ job.job_experience}} <span class="icon">💰</span>{{job.job_salary}} <span class="icon">📍</span>{{job.job_location}}</p>
-                    <p><span class="icon">📄</span>Graduate/Post Graduate with industry/domain and network operations experience...</p>
-                    <p>service operations · service assurance · order management · consulting · customer</p>
+                <div class="d-flex justify-content-end">
+                    <p class="job_post_date text-muted pe-2 pt-2 text-decoration-n font-size-large">Posted by me | {{ job.created_at|date:"F j, Y" }}</p>
                 </div>
-                <div class="jobcard-footer">
-                    <p>1 Day Ago <span class="save">💾 Save</span></p>
                 </div>
-                <a href="{% url 'job_applications' job.id %}">View applications</a>
-            </div>
         </a>
 
         {% endfor %}
-        <!-- List of existing jobs -->
-        {% comment %} <div class="job-list">
-            <ul class="list-group">
-                <!-- Example job items -->
-                <li class="list-group-item">Software Engineer - Develop and maintain software applications.</li>
-                <li class="list-group-item">Data Analyst - Analyze data and generate reports.</li>
-                <li class="list-group-item">Project Manager - Oversee project timelines and deliverables.</li>
-                <!-- Add more job items here -->
-            </ul>
-        </div> {% endcomment %}
+    </div>
+
+</div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -178,6 +435,20 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+
+        document.querySelector('.filter-header').addEventListener('click', function() {
+            const content = this.nextElementSibling;
+            const icon = this.querySelector('.toggle-icon');
+            
+            // Toggle the display of the content
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(225deg)'; // Rotate to up arrow
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(45deg)'; // Rotate to down arrow
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', async () => {
                 const switches = document.querySelectorAll('.switch input[type="checkbox"]');

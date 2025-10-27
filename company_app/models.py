@@ -122,7 +122,8 @@ class Job(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
     # unique_number = models.CharField(default="0",max_length=255,null=True)
     # unique_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, blank=True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.job_title
 
