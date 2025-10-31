@@ -94,6 +94,7 @@ class Job(models.Model):
     ('Internship', 'Internship'),
     ]
     job_status_choices = [
+        ('draft', 'Draft'),
         ('active', 'Active'),
         ('inactive', 'Inactive'),
         ('closed', 'Closed'),

@@ -1,5 +1,8 @@
 {% extends 'company_common.html' %}
+
+
 {% block content %}
+
   <section class="w-100 d-flex flex-column align-items-center">
     <div class="w-75 d-flex flex-column">
       <h1>Job Applications for {{ company.name }}</h1>
@@ -35,7 +38,7 @@
         <p>No applications have been submitted yet.</p>
       {% endif %}
 
-      <a href="{% url 'company_front' %}">Back to Dashboard</a>
+      <a href="{% url 'company_jobs' %}">Back to Dashboard</a>
     </div>
   </section>
 {% endblock %}
