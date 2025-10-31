@@ -34,7 +34,8 @@ DEBUG = True
 
 
 # ALLOWED_HOSTS = ['mature-pangolin-touched.ngrok-free.app','127.0.0.1']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','mature-pangolin-touched.ngrok-free.app']
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost','mature-pangolin-touched.ngrok-free.app' , '*']
+ALLOWED_HOSTS = ['gargy5703.pythonanywhere.com']
 
 
 
@@ -42,7 +43,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost','mature-pangolin-touched.ngrok-free.ap
 
 INSTALLED_APPS = [
     'rest_framework',
-    "django_browser_reload",
+    # "django_browser_reload",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    # "django_browser_reload.middleware.BrowserReloadMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -139,7 +140,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static/images/",
     # "/var/www/static/",
 ]
-# STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
