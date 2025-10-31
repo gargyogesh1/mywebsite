@@ -351,26 +351,30 @@
                     <div class="filter-content">
                         <label class="filter-item">
                             <div class="filter-head">
-                                <input type="checkbox">
+                                <input type="checkbox"
+                                {% if 'active' in selected_statuses %}checked{% endif %}
+                                >
                                 <span>Active Jobs</span>
                             </div>
                                 <span class="count">1</span>
                         </label>
 
                         <label class="filter-item">
-                                                        <div class="filter-head">
-
-                            <input type="checkbox">
-                            <span>Closed Jobs</span>
+                            <div class="filter-head">
+                                <input type="checkbox"
+                                {% if 'closed' in selected_statuses %}checked{% endif %}
+                                >
+                                <span>Closed Jobs</span>
                             </div>
                             <span class="count">2</span>
                         </label>
 
                         <label class="filter-item">
-                                                        <div class="filter-head">
-
-                            <input type="checkbox">
-                            <span>Expired Jobs</span>
+                            <div class="filter-head">
+                                <input type="checkbox"
+                                {% if 'inactive' in selected_statuses %}checked{% endif %}
+                                >
+                                <span>Inactive Jobs</span>
                             </div>
                             <span class="count">0</span>
                         </label>
@@ -388,7 +392,7 @@
             </li>
             
             <li class="tab-item">
-            <a href="#" class="tab-link">Drafts <span class="count">2</span></a>
+            <a href="#" class="tab-link">Drafts <span class="count">0</span></a>
             <span class="notification-dot"></span>
             </li>
         </ul>
@@ -435,6 +439,45 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+
+        // Function to handle the filtering logic
+        function applyJobStatusFilter() {
+            const filterContainer = document.getElementById('job-status-filters');
+            
+            // Select all checked checkboxes with the name 'status'
+            const checkedCheckboxes = filterContainer.querySelectorAll('input[type="checkbox"]:checked');
+            
+            // Start with the current page URL path
+            let baseUrl = window.location.pathname;
+            
+            // Create an array to hold the filter values (e.g., ['active', 'closed'])
+            const selectedStatuses = [];
+            checkedCheckboxes.forEach(checkbox => {
+                selectedStatuses.push(checkbox.value);
+            });
+
+            let queryString = '';
+
+            if (selectedStatuses.length > 0) {
+                // Construct the query string: 'status=active&status=closed'
+                queryString = '?' + selectedStatuses.map(status => `status=${status}`).join('&');
+            }
+
+            // Combine base URL with the new query string
+            const newUrl = baseUrl + queryString;
+
+            // Send the GET request by redirecting the browser
+            window.location.href = newUrl;
+        }
+
+        // Attach the event listener to the parent container for efficiency
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterContainer = document.getElementById('job-status-filters');
+            if (filterContainer) {
+                // Listen for any change event (when a checkbox is ticked or unticked)
+                filterContainer.addEventListener('change', applyJobStatusFilter);
+            }
+        });
 
         document.querySelector('.filter-header').addEventListener('click', function() {
             const content = this.nextElementSibling;

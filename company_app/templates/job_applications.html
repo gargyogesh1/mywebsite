@@ -1,43 +1,416 @@
 {% extends "company_common.html" %}
 {% block content %}
 
+<style>
+:root {
+    --primary-blue: #007bff;
+    --success-green: #28a745;
+    --warning-yellow: #ffc107;
+    --danger-red: #dc3545;
+    --light-gray: #f8f9fa;
+    --medium-gray: #e9ecef;
+    --dark-gray: #6c757d;
+    --text-color: #343a40;
+    --border-color: #dee2e6;
+}
+.candidate-card {
+    display: flex;
+    flex-wrap: wrap; /* Allows sections to wrap on smaller screens */
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   
+    overflow: hidden; /* Ensures rounded corners are visible */
+}
+
+/* --- Main Content Area --- */
+.card-main-content {
+    flex: 3; /* Takes more space than sidebar */
+    padding: 20px;
+    border-right: 1px solid var(--border-color);
+}
+
+.candidate-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.candidate-select {
+    margin-right: 10px;
+    transform: scale(1.2); /* Make checkbox a bit larger */
+}
+
+.candidate-name {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    margin-right: 10px;
+}
+
+.tag {
+    font-size: 0.75em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.recommended-tag {
+    background-color: #e0f2f1; /* Light teal */
+    color: #00796b; /* Darker teal */
+}
+
+.candidate-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85em;
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+}
+
+.candidate-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.candidate-meta i {
+    margin-right: 5px;
+    color: #a0a0a0;
+}
+
+.candidate-details {
+    font-size: 0.9em;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    flex-basis: 120px; /* Fixed width for labels */
+    color: var(--dark-gray);
+    font-weight: 500;
+}
+
+.detail-value {
+    flex-grow: 1;
+    color: var(--text-color);
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.skill-tag {
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    white-space: nowrap; /* Prevents skill tags from breaking into multiple lines if space is tight */
+}
+
+/* --- Sidebar Section --- */
+.card-sidebar {
+    flex: 1; /* Takes less space */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sidebar-top-icons {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Pushes icons to the right */
+    gap: 15px;
+    font-size: 1.1em;
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-blue);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.profile-quote {
+    font-size: 0.85em;
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: #fff;
+    color: var(--text-color);
+    font-size: 0.9em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--light-gray);
+}
+
+.btn-contact {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.btn-contact i {
+    color: var(--primary-blue);
+}
+
+.btn-contact .icon-chevron-down {
+    margin-left: auto; /* Pushes arrow to the right */
+    border: solid var(--primary-blue);
+    border-width: 0 2px 2px 0;
+    padding: 3px;
+    display: inline-block;
+    transform: rotate(45deg); /* Down arrow */
+}
+
+
+.btn-call-app {
+    background-color: var(--primary-blue);
+    color: #fff;
+    border-color: var(--primary-blue);
+}
+
+.btn-call-app i {
+    color: #fff;
+}
+
+
+/* --- Footer Action Bar --- */
+.card-footer {
+    width: 100%; /* Takes full width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--light-gray);
+}
+
+.btn-add-comment {
+    background-color: transparent;
+    border: none;
+    color: var(--primary-blue);
+    font-weight: 500;
+    gap: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    background-color: #fff;
+    color: var(--dark-gray);
+    border-color: var(--border-color);
+    padding: 8px 12px;
+}
+
+.btn-shortlist {
+    border-color: var(--success-green);
+    color: var(--success-green);
+}
+
+.btn-maybe {
+    border-color: var(--warning-yellow);
+    color: var(--warning-yellow);
+}
+
+.btn-reject {
+    border-color: var(--danger-red);
+    color: var(--danger-red);
+}
+
+.btn-delete {
+    background-color: transparent;
+    border: none;
+    color: var(--dark-gray);
+    font-size: 1.1em;
+}
+
+/* Icons (if not using FontAwesome, simple text/emoji or custom svgs) */
+.icon-briefcase, .icon-calendar, .icon-location, .icon-mail, .icon-share, 
+.icon-phone, .icon-comment, .icon-check, .icon-question, .icon-times, .icon-trash {
+    /* Basic styling if using emojis/text for icons */
+    margin-right: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .candidate-card {
+        flex-direction: column;
+    }
+    .card-main-content {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .card-sidebar {
+        width: 100%;
+        padding-top: 15px;
+    }
+    .sidebar-top-icons {
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    .sidebar-actions {
+        width: 80%; /* Make buttons slightly narrower */
+    }
+    .card-footer {
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 20px;
+    }
+    .action-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    .btn-action {
+        flex-grow: 1; /* Make action buttons take equal space */
+    }
+}
+  </style>
 <section class="w-100 d-flex flex-column align-items-center">
     <div class="w-75 d-flex flex-column">
-<h1>Job Applications for {{ job.job_title }}</h1>
+        <div class="d-flex p-2 justify-content-between align-items-center">
+            <h1>Job Applications for {{ job.job_title }}</h1>
+                <a href="{% url 'company_jobs' %}">Back to Dashboard</a>
+
+        </div>
     
     {% if applications %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Job Title</th>
-                    <th>Applicant Name</th>
-                    <th>Email</th>
-                    <th>Applied At</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
+      
                 {% for application in applications %}
-                <tr>
-                    <td>{{ application.job.job_title }}</td>
-                    <td>{{ application.seeker.full_name }}</td>
-                    <td>{{ application.seeker.email_id }}</td>
-                    <td>{{ application.applied_at }}</td>
-                    <td>{{ application.get_status_display }}</td>
-                    <td>
-                        <a href="{% url 'job_applications' application.job.id %}">View Details</a>
-                    </td>
-                </tr>
+                <div class="candidate-card">
+                    <div class="card-main-content">
+                        <div class="candidate-header">
+                            <input type="checkbox" class="candidate-select">
+                            <h3 class="candidate-name">{{ application.seeker.full_name }}</h3>
+                            <span class="tag recommended-tag">Recommended</span>
+                        </div>
+                        <div class="candidate-meta">
+                            <span>
+                                <i class="icon-briefcase"></i> 0y 7m
+                            </span>
+                            <span>
+                                <i class="icon-calendar"></i> Available to join in ...
+                            </span>
+                            <span>
+                                <i class="icon-location"></i> New Delhi
+                            </span>
+                        </div>
+
+                        <div class="candidate-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Profile Summary</span>
+                                <span class="detail-value">{{ application.seeker.profile_summary }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Education</span>
+                                <span class="detail-value">B.B.A/ B.M.S Management Education & Research Institute, Delhi 2024</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Pref. locations</span>
+                                <span class="detail-value">{{ application.seeker.seekerPreference }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Key skills</span>
+                                <div class="skill-tags">
+                                    {% for skill in application.seeker.skills.all %}
+                                    <span class="skill-tag">{{ skill.name }}</span>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-sidebar">
+                        <div class="sidebar-top-icons">
+                            <i class="icon-mail">✉️</i> <i class="icon-share">🔗</i> </div>
+
+                        <div class="profile-avatar">{{ application.seeker.full_name|slice:":1" }}</div>
+                        <p class="profile-quote">{{ application.seeker.profile_summary }}</p>
+                        <div class="sidebar-actions">
+                            <button class="btn btn-contact">
+                                <i class="icon-phone">📞</i> {{ application.seeker.mobile_number }}
+                                <i class="icon-chevron-down"></i>
+                            </button>
+                            <button class="btn btn-contact">
+                                <i class="icon-phone"> </i> {{ application.seeker.email_id }}
+                                <i class="icon-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-footer ">
+                        <p class="fs-sm">Applied on:
+                        {{ application.applied_at }}
+                        </p>
+                        <button class="btn btn-add-comment">
+                            <i class="icon-comment"></i> Add comment
+                        </button>
+                        <div class="action-buttons">
+                            <button class="btn btn-action btn-shortlist">
+                                <i class="icon-check"></i> Shortlist
+                            </button>
+                            <button class="btn btn-action btn-maybe">
+                                <i class="icon-question"></i> Maybe
+                            </button>
+                            <button class="btn btn-action btn-reject">
+                                <i class="icon-times"></i> Reject
+                            </button>
+                            <button class="btn btn-delete">
+                                <i class="icon-trash">🗑️</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            
                 {% endfor %}
                 
-            </tbody>
-        </table>
+         
     {% else %}
         <p>No applications have been submitted yet.</p>
     {% endif %}
 
-    <a href="{% url 'company_front' %}">Back to Dashboard</a>
     </div>
 
 </section>

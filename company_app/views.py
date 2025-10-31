@@ -136,7 +136,6 @@ def company_job(request):
                     job_company_culture = job_company_culture,
                     job_benefits = job_benefits,
                     more_details = more_details
-                    
                 )
                 job.save()
                 print("end object created")
@@ -275,7 +274,7 @@ def company_login(request):
 
         if user1 is not None:
             login(request,user1)
-            return redirect('company_front')
+            return redirect('company_jobs')
         else:
             messages.error(request,"Invalid email id or password")
             return redirect('company_login')
@@ -342,18 +341,26 @@ def company_forgot_password(request):
     return render(request, 'company_forgot_password.html',context)
 
 
-def company_front(request):
+def company_jobs(request):
     print(request.user.email)
     user_email = request.user.email
-    job = Job.objects.filter(company__official_email=user_email).annotate(
-        # This creates a new field named 'accepted_count' on each Job object.
+    selected_statuses = request.GET.getlist('status') 
+    jobs = Job.objects.filter(company__official_email=user_email)
+
+    # If the user selected any status, apply the filter
+    if selected_statuses:
+        jobs = jobs.filter(job_status__in=selected_statuses)
+
+    # Re-apply annotations for counts needed in the template
+    jobs = jobs.annotate(
         accepted_count=Count(
             'applications', 
             filter=models.Q(applications__status='accepted')
         )
     )
-    print(job)
-    return render(request, 'company_front.html',{"job":job,})
+    
+  
+    return render(request, 'company_jobs.html',{"job":jobs,'selected_statuses': selected_statuses,})
 
 import json
 
