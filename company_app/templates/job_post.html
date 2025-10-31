@@ -12,6 +12,19 @@
     body {
         font-family: "Inter", sans-serif;
     }
+    .page-grid {
+        padding-inline: 5%;
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        {% comment %} background-color: #07074D; {% endcomment %}
+        color: white;
+        padding: 30px 20px;
+    }
+
     .formbold-main-wrapper {
         display: flex;
         align-items: center;
@@ -20,7 +33,7 @@
     }
 
     .formbold-form-wrapper {
-        margin: 0 auto;
+      
         max-width: 550px;
         width: 100%;
         background: white;
@@ -196,185 +209,219 @@
         <p class="{{ message.tags }}">{{ message }}</p>
     {% endfor %}
 {% endif %}
-            
-<div class="formbold-main-wrapper">
-    <div class="formbold-form-wrapper">
-      <form method="POST">
-        {% csrf_token %}
-          <div class="formbold-steps">
-              <ul>
-                  <li class="formbold-step-menu1 active">
-                      <span>1</span>
-                      Filler Details
-                  </li>
-                  <li class="formbold-step-menu2">
-                      <span>2</span>
-                      Job Details
-                  </li>
-                  <li class="formbold-step-menu3">
-                      <span>3</span>
-                      Description
-                  </li>
-              </ul>
-          </div>
-  
-          <!-- Step 1 -->
-          <div class="formbold-form-step-1 active">
-            <div>
-                <label for="jobpost_name" class="formbold-form-label"> Job Post Name </label>
-                <input
-                
-                type="text"
-                name="jobpost_name"
-                id="jobpost_name"
-                placeholder="Enter Job Post Name"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="jobpost_phoneno" class="formbold-form-label"> Phone Number </label>
-                <input
-                type="text"
-                name="jobpost_phoneno"
-                id="jobpost_phoneno"
-                placeholder="Enter Phone Number"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="jobpost_email" class="formbold-form-label"> Email </label>
-                <input
-                type="email"
-                name="jobpost_email"
-                id="jobpost_email"
-                placeholder="Enter Email Address"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="jobpost_designation" class="formbold-form-label"> Designation </label>
-                <input
-                type="text"
-                name="jobpost_designation"
-                id="jobpost_designation"
-                placeholder="Enter Designation"
-                class="formbold-form-input"
-                />
-            </div>
-          </div>
-  
-          <!-- Step 2 -->
-          <div class="formbold-form-step-2">
-            <div>
-                <label for="job_title" class="formbold-form-label"> Job Title </label>
-                <input
-                type="text"
-                name="job_title"
-                id="job_title"
-                placeholder="Enter Job Title"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="job_workplace" class="formbold-form-label"> Workplace Type </label>
-                <select name="job_workplace" id="job_workplace" class="formbold-form-input">
-                  <option value="">Select Workplace Type</option>
-                  <option value="Onsite">Onsite</option>
-                  <option value="Remote">Remote</option>
-                  <option value="Hybrid">Hybrid</option>
-                </select>
-            </div>
-            <div>
-                <label for="job_location" class="formbold-form-label"> Job Location </label>
-                <input
-                type="text"
-                name="job_location"
-                id="job_location"
-                placeholder="Enter Job Location"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="job_type" class="formbold-form-label"> Job Type </label>
-                <select name="job_type" id="job_type" class="formbold-form-input">
-                  <option value="">Select Job Type</option>
-                  <option value="Full-time">Full-time</option>
-                  <option value="Part-time">Part-time</option>
-                  <option value="Contract">Contract</option>
-                  <option value="Temporary">Temporary</option>
-                  <option value="Other">Other</option>
-                  <option value="Volunteer">Volunteer</option>
-                  <option value="Internship">Internship</option>
-                </select>
-            </div>
-            <div>
-                <label for="job_no_opening" class="formbold-form-label"> No. of Openings </label>
-                <input
-                type="text"
-                name="job_no_opening"
-                id="job_no_opening"
-                placeholder="Enter Number of Openings"
-                class="formbold-form-input"
-                />
-            </div>
-            <div>
-                <label for="job_salary" class="formbold-form-label"> Salary </label>
-                <input
-                type="text"
-                name="job_salary"
-                id="job_salary"
-                placeholder="Enter Salary"
-                class="formbold-form-input"
-                />
-            </div>
-          </div>
-  
-          <!-- Step 3 -->
-          <div class="formbold-form-step-3">
-            <div>
-                <label for="job_skills" class="formbold-form-label"> Job Skills </label>
-                <input
-                type="text"
-                name="job_skills"
-                id="job_skills"
-                placeholder="Enter Job Skills"
-                class="formbold-form-input"
-                />
-            </div>
-            {% comment %} <div>
-                <label for="description" class="formbold-form-label"> Description </label>
-                <textarea
-                rows="6"
-                name="description"
-                id="description"
-                placeholder="Enter Job Description"
-                class="formbold-form-input"
-                ></textarea>
-            </div> {% endcomment %}
-          </div>
-  
-          <!-- Navigation Buttons -->
-          <div class="formbold-form-btn-wrapper">
-            <button class="formbold-back-btn">
-              Back
-            </button>
-            <button class="formbold-btn">
-                Next Step
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_1675_1807)">
-                <path d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z" fill="white"/>
-                </g>
-                <defs>
-                <clipPath id="clip0_1675_1807">
-                <rect width="16" height="16" fill="white"/>
-                </clipPath>
-                </defs>
-                </svg>
-            </button>
-          </div>
-      </form>
+<div class="page-grid">
+    <aside class="sidebar">
+        
+  <div class="step-container" style="display: flex; flex-direction: column; position: relative;">
+    
+    <div class="step" data-step="1" style="display: flex; align-items: center; margin: 20px 0; position: relative;">
+      <div class="circle" style="width: 25px; height: 25px; border-radius: 50%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; margin-right: 12px;"></div>
+      <span style="color: #37474f; font-size: 16px;">HR Details</span>
     </div>
-</div>
+
+    <div class="step" data-step="2" style="display: flex; align-items: center; margin: 20px 0; position: relative;">
+      <div class="circle" style="width: 25px; height: 25px; border-radius: 50%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; margin-right: 12px;"></div>
+      <span style="color: #37474f; font-size: 16px;">Job Details</span>
+    </div>
+
+    <div class="step" data-step="3" style="display: flex; align-items: center; margin: 20px 0; position: relative;">
+      <div class="circle" style="width: 25px; height: 25px; border-radius: 50%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; margin-right: 12px;"></div>
+      <span style="color: #37474f; font-size: 16px;">Job Description</span>
+    </div>
+
+    {% comment %} <div class="step" data-step="4" style="display: flex; align-items: center; margin: 20px 0; position: relative;">
+      <div class="circle" style="width: 25px; height: 25px; border-radius: 50%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; margin-right: 12px;"></div>
+      <span style="color: #37474f; font-size: 16px;">Job description</span>
+    </div>
+
+    <div class="step" data-step="5" style="display: flex; align-items: center; margin: 20px 0; position: relative;">
+      <div class="circle" style="width: 25px; height: 25px; border-radius: 50%; background-color: #1e88e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; margin-right: 12px;"></div>
+      <span style="color: #37474f; font-size: 16px;">Communication preferences</span>
+    </div> {% endcomment %}
+  </div>
+
+  {% comment %} <button style="margin-top: 20px; padding: 10px 20px; border: none; background-color: #1e88e5; color: white; border-radius: 8px; cursor: pointer;">Next Step</button> {% endcomment %}
+
+    </aside>           
+    <div class="formbold-main-wrapper">
+        <div class="formbold-form-wrapper">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="formbold-steps">
+                <ul>
+                    <li class="formbold-step-menu1 active">
+                        <span>1</span>
+                        Filler Details
+                    </li>
+                    <li class="formbold-step-menu2">
+                        <span>2</span>
+                        Job Details
+                    </li>
+                    <li class="formbold-step-menu3">
+                        <span>3</span>
+                        Description
+                    </li>
+                </ul>
+            </div>
+    
+            <!-- Step 1 -->
+            <div class="formbold-form-step-1 active">
+                <div>
+                    <label for="jobpost_name" class="formbold-form-label"> Job Post Name </label>
+                    <input
+                    
+                    type="text"
+                    name="jobpost_name"
+                    id="jobpost_name"
+                    placeholder="Enter Job Post Name"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="jobpost_phoneno" class="formbold-form-label"> Phone Number </label>
+                    <input
+                    type="text"
+                    name="jobpost_phoneno"
+                    id="jobpost_phoneno"
+                    placeholder="Enter Phone Number"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="jobpost_email" class="formbold-form-label"> Email </label>
+                    <input
+                    type="email"
+                    name="jobpost_email"
+                    id="jobpost_email"
+                    placeholder="Enter Email Address"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="jobpost_designation" class="formbold-form-label"> Designation </label>
+                    <input
+                    type="text"
+                    name="jobpost_designation"
+                    id="jobpost_designation"
+                    placeholder="Enter Designation"
+                    class="formbold-form-input"
+                    />
+                </div>
+            </div>
+    
+            <!-- Step 2 -->
+            <div class="formbold-form-step-2">
+                <div>
+                    <label for="job_title" class="formbold-form-label"> Job Title </label>
+                    <input
+                    type="text"
+                    name="job_title"
+                    id="job_title"
+                    placeholder="Enter Job Title"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="job_workplace" class="formbold-form-label"> Workplace Type </label>
+                    <select name="job_workplace" id="job_workplace" class="formbold-form-input">
+                    <option value="">Select Workplace Type</option>
+                    <option value="Onsite">Onsite</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="job_location" class="formbold-form-label"> Job Location </label>
+                    <input
+                    type="text"
+                    name="job_location"
+                    id="job_location"
+                    placeholder="Enter Job Location"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="job_type" class="formbold-form-label"> Job Type </label>
+                    <select name="job_type" id="job_type" class="formbold-form-input">
+                    <option value="">Select Job Type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Temporary">Temporary</option>
+                    <option value="Other">Other</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Internship">Internship</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="job_no_opening" class="formbold-form-label"> No. of Openings </label>
+                    <input
+                    type="text"
+                    name="job_no_opening"
+                    id="job_no_opening"
+                    placeholder="Enter Number of Openings"
+                    class="formbold-form-input"
+                    />
+                </div>
+                <div>
+                    <label for="job_salary" class="formbold-form-label"> Salary </label>
+                    <input
+                    type="text"
+                    name="job_salary"
+                    id="job_salary"
+                    placeholder="Enter Salary"
+                    class="formbold-form-input"
+                    />
+                </div>
+            </div>
+    
+            <!-- Step 3 -->
+            <div class="formbold-form-step-3">
+                <div>
+                    <label for="job_skills" class="formbold-form-label"> Job Skills </label>
+                    <input
+                    type="text"
+                    name="job_skills"
+                    id="job_skills"
+                    placeholder="Enter Job Skills"
+                    class="formbold-form-input"
+                    />
+                </div>
+                {% comment %} <div>
+                    <label for="description" class="formbold-form-label"> Description </label>
+                    <textarea
+                    rows="6"
+                    name="description"
+                    id="description"
+                    placeholder="Enter Job Description"
+                    class="formbold-form-input"
+                    ></textarea>
+                </div> {% endcomment %}
+            </div>
+    
+            <!-- Navigation Buttons -->
+            <div class="formbold-form-btn-wrapper">
+                {% comment %} <button class="formbold-back-btn">
+                Back
+                </button> {% endcomment %}
+                <button class="formbold-btn" id="nextBtn">
+                    Next Step
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1675_1807)">
+                    <path d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z" fill="white"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1675_1807">
+                    <rect width="16" height="16" fill="white"/>
+                    </clipPath>
+                    </defs>
+                    </svg>
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+<div>
 {% comment %} {% block script %} {% endcomment %}
 <script>
 const stepMenuOne = document.querySelector('.formbold-step-menu1')
@@ -428,6 +475,20 @@ const stepMenuOne = document.querySelector('.formbold-step-menu1')
         document.querySelector('form').submit()
       }
   })
+
+    const steps = document.querySelectorAll('.step');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentStep = 0;
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < steps.length) {
+        const circle = steps[currentStep].querySelector('.circle');
+        circle.style.backgroundColor = '#4caf50';
+        circle.textContent = '✔';
+        currentStep++;
+      }
+    });
+
 </script> 
 
 {% comment %} {% endblock %} {% endcomment %}

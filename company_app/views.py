@@ -58,7 +58,11 @@ def company_job(request):
                         messages.error(request, error)
             else:
                 # Create and save the JobPost object to the database
-                api_url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCNQc9p6c2_fYszrGsRIKlzuna5v6oOxtI'
+                api_url = (
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            "gemini-2.0-flash:generateContent?key=AIzaSyCNQc9p6c2_fYszrGsRIKlzuna5v6oOxtI"
+        )
+                # api_url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCNQc9p6c2_fYszrGsRIKlzuna5v6oOxtI'
                 headers = {'Content-Type': 'application/json'}
                 data = {
                     "contents": [{
@@ -189,7 +193,7 @@ def company_register(request):
     if request.method == "POST":
         name = request.POST.get('company_name')
         phone_number = request.POST.get('company_phone')
-        official_email = request.POST.get('office_email')
+        official_email = request.POST.get('office_email').lower()
         website = request.POST.get('company_url')
         address = request.POST.get('company_address')
         industry = request.POST.get('company_work')
