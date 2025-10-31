@@ -90,7 +90,7 @@
           <li><a href="#">CONTACT US</a></li>
           {% if user.is_authenticated %}
           <li>
-            <a href="{% url 'logout' %}">Logout</a>
+            <a href="/logout">Logout</a>
             <i class='bx bxs-chevron-down js-arrow arrow '></i>
           <ul class="js-sub-menu sub-menu">
             <li><a href="#">{{ request.user.get_username }}</a></li>
